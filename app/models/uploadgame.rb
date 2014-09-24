@@ -38,8 +38,15 @@ class Uploadgame < ActiveRecord::Base
     (player_info_start_row..player_info_start_row+@NoofPlayers-1).each do |i|
       @Curplayer=Array.new(9)
       @Curplayer[0] = gameinfows[i,1] #serial
-      @Curplayer[1] = gameinfows[i,2] #name
+      @Curplayer[1] = gameinfows[i,2].strip #name
+      puts @Curplayer[0].to_s
+      puts @Curplayer[1]
+      Rails.logger.info(i.to_s)
+      Rails.logger.info(@Curplayer[0].to_s)
+      Rails.logger.info(@Curplayer[1])
+      Rails.logger.info(@Curplayer[1].length)
       @Curprofile = Playerprofile.where( :name => @Curplayer[1] ).first
+     
       @Curplayer[2]= @Curprofile.user_id #id
       @Curplayer[3] = @Curprofile.curscore #Bscore
       @Curplayer[3]=@Curprofile.initscore if @Curplayer[3]==nil
@@ -208,25 +215,33 @@ class Uploadgame < ActiveRecord::Base
 
   def self.calculate_score(players, gamerecords)
     players.each do |player|
+      Rails.logger.info(player)
       @playerwongames=gamerecords.find_all{|v| v[1]==player[1]}
-  	  player[4]+=@playerwongames.length
-      @playerwongames.each do |wongame|
-       
-        opplayer=players.find{|e| e[1]==wongame[2]}
-        player[7]+=calculate_score_change( player[3].to_i,opplayer[3].to_i)
+      if @playerwongames
+  	    player[4]+=@playerwongames.length
+    
+        @playerwongames.each do |wongame|
+          Rails.logger.info(wongame)
+          opplayer=players.find{|e| e[1]==wongame[2]}
+           Rails.logger.info(opplayer)
+          player[7]+=calculate_score_change( player[3].to_i,opplayer[3].to_i)
         
-      end	
+        end
+      end 
   	  @playerlosegames=gamerecords.find_all{|v| v[2]==player[1]}
-  	  player[5]+=@playerlosegames.length
+      if @playerlosegames
+  	    player[5]+=@playerlosegames.length
 
-  	  @playerlosegames.each do |losegame|
-      
-        opplayer=players.find{|e| e[1]==losegame[1]}
-        player[7]-=calculate_score_change( opplayer[3].to_i,player[3].to_i)
+  	    @playerlosegames.each do |losegame|
+         Rails.logger.info(losegame)
+          opplayer=players.find{|e| e[1]==losegame[1]}
+           Rails.logger.info(opplayer)
+          player[7]-=calculate_score_change( opplayer[3].to_i,player[3].to_i)
         
+        end
+      
       end
-      
-      
+      Rails.logger.info(player)
       player[6]=player[3]+player[7]
     end	
 

@@ -17,8 +17,9 @@ class PlayerprofilesController < ApplicationController
 
   def search
     reg = /^\d+$/
+
     if ! reg.match(params[:keyword])
-            @playerprofiles = Playerprofile.includes(:user).where( [ "name like ?", "%#{params[:keyword]}%" ]).order(sort_column + " " + sort_direction).page( params[:page] ).per(50)
+            @playerprofiles = Playerprofile.includes(:user).where( [ "name like ?", "%#{params[:keyword].strip}%" ]).order(sort_column + " " + sort_direction).page( params[:page] ).per(50)
 
     else
       @playerprofiles=Array.new

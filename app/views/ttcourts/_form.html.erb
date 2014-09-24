@@ -57,7 +57,8 @@
               <div class="col-xs-10 col-md-10 col-lg-10">
                 <%= f.label "地址", :class => "form-label" %>:
                 <%= f.text_field :address, :required => true, :class => "form-control", :size => "50",:onchange=>"codeAddress(this);"  %>
-              
+                <br></br>
+               <%= check_box("tag", 0 , {checked: true}) %>使用自動地址解碼
               </div>
             </div>
             <div class="col-xs-10 col-md-10 col-lg-10"></br></div>

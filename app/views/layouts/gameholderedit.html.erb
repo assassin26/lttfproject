@@ -30,14 +30,17 @@
     <div id="wrap">
 
       <div class="container">
-        <div class="top-buffer"></div>
+
         <div class="row">
+          <div class=" col-md-10 hidden-xs hidden-lg">
+            <div class="top-buffer"></div>
+          </div>
           <div class="col-md-4">
                <!-- devise notice -->
             <%= render partial: "common/flash_messages", flash: flash %>
           </div>
           <div class="col-md-offset-10 col-md-2">
-            <ul id="sidebar" class="nav nav-stacked affix" >
+            <ul id="sidebar" class="nav nav-stacked affix hidden-xs" >
               <li><font color="red" size="1"><strong>廣告欄位出租!意者請洽李組長</strong></font></li>
               <li><a  href= "http://www.pcstore.com.tw/ilovemama/M00464699.htm"><img src="/images/chrisadv.gif" class="img-responsive" alt="LTTF Logo"></a></li>
               <li><a  href= "/"><img src="/images/lttf_logo_120x80.jpg" class="img-responsive" alt="LTTF Logo"></a></li>
@@ -52,7 +55,7 @@
             <%= yield %>
           
           </div>
-        </div>
+
 
         <div class="row">
           <div class="col-md-9">
@@ -206,7 +209,7 @@ function codeAddress() {
       document.getElementById("gameholder_lat").value=gon.lat;
       document.getElementById("gameholder_lng").value=gon.lng;
       var latlng = new google.maps.LatLng(gon.lat,gon.lng);
-      reverseGeocode(latlng,false);
+       reverseGeocode(latlng,document.getElementById("tag_0").checked);
 
       } else {
         alert("Geocode was not successful for the following reason: " + status);
@@ -243,7 +246,7 @@ function testdragend(pos)
   tt_lng.value = pos.A;
   handler.getMap().setZoom(16);
   handler.map.centerOn({ lat: pos.k, lng: pos.A }); 
-  reverseGeocode(pos,true);
+  reverseGeocode(pos,document.getElementById("tag_0").checked);
 }
 
 handler.map.listen_to_markers = function(markers){
@@ -278,8 +281,10 @@ function reverseGeocode(latlng,addressupdate){
                     }
                 }
             }
-           
-            updateAddress(level_2,results[0].formatted_address,addressupdate);
+            if(addressupdate)
+              {
+                updateAddress(level_2,results[0].formatted_address);
+              } 
        } else
        {
 

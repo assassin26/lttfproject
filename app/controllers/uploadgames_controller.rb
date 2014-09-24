@@ -7,13 +7,13 @@ class UploadgamesController < ApplicationController
   # GET /uploadgames.json
   require "koala"
  def facebook_auth
-
-    if current_user && ((current_user.has_role? :superuser) || (current_user.has_role? :admin)) && !session[:access_token]
-      session[:oauth]= Koala::Facebook::OAuth.new(APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_ID'].to_s, APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_SECRET'],APP_CONFIG[APP_CONFIG['HOST_TYPE']]['REDIRECT_URI'])
-      @auth_url =  session[:oauth].url_for_oauth_code(:permissions=> " manage_pages,publish_stream,user_groups,publish_actions")  
+    
+      if current_user && ((current_user.has_role? :superuser) || (current_user.has_role? :admin)) && !session[:access_token]
+        session[:oauth]= Koala::Facebook::OAuth.new(APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_ID'].to_s, APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_SECRET'],APP_CONFIG[APP_CONFIG['HOST_TYPE']]['REDIRECT_URI'])
+        @auth_url =  session[:oauth].url_for_oauth_code(:permissions=> " manage_pages,publish_stream,user_groups,publish_actions")  
      
-    end
-   
+      end
+    
   end
   def callback
    
@@ -25,10 +25,11 @@ class UploadgamesController < ApplicationController
      redirect_to :action => "index"
   end
   def index
-
-    if current_user 
-     return redirect_to(@auth_url)   if ( (current_user.has_role? :superuser) || (current_user.has_role? :admin)) && !session[:access_token]
-    end  
+  
+      if current_user 
+        return redirect_to(@auth_url)   if ( (current_user.has_role? :superuser) || (current_user.has_role? :admin)) && !session[:access_token]
+      end  
+  
     @uploadgames = Uploadgame.waitingforprocess.page(params[:page]).per(10)
    
     respond_to do |format|
@@ -91,7 +92,7 @@ class UploadgamesController < ApplicationController
   end
 
   def displayuploadfile
-
+    
     @uploadgame=Uploadgame.upload(params[:gamefileurl])
     #@uploadgame =  Uploadgame.last
     @playerssummery=getplayersummary(@uploadgame.players_result)
