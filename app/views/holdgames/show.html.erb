@@ -10,7 +10,11 @@
   </p>
   <p>
     <b>比賽日期：</b>
-    <%= @holdgame.startdate %>
+    <% if @holdgame.gamedays==1 %>
+       <%= @holdgame.startdate %>
+    <%else%>
+       <%=@holdgame.startdate %>~<%=@holdgame.enddate %>
+    <%end%>   
   </p>
   <p>
     <b>比賽場地：</b>
