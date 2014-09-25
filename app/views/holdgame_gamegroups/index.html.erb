@@ -12,7 +12,13 @@
 
     <p>
     <b>比賽日期:</b>
-      <font color="blue"><%= @holdgame.startdate %></font>
+      <font color="blue">
+         <% if @holdgame.gamedays==1 %>
+            <%= @holdgame.startdate %>
+         <%else%>
+            <%= @holdgame.startdate %>~ <%= @holdgame.enddate %>
+         <%end%>   
+      </font>
     </p>
     <p>
     <b>比賽場地:</b>

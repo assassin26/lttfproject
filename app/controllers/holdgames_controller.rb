@@ -26,6 +26,7 @@ class HoldgamesController < InheritedResources::Base
   def new
   	#@holdgame = Holdgame.new(:gameholder_id => @cur_gameholder.id)
     @holdgame=@cur_gameholder.holdgames.build
+    @holdgame.gamedays=1
     #@holdgame.url=holdgame_gamegroups_url(@holdgame)
   	 respond_to do |format|
       format.html # new.html.erb

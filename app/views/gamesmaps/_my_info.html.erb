@@ -8,7 +8,11 @@
    <% end %>
    <font color ='blue'>比賽場地：<%=holdgame.courtname %></font><br>
    <font color ='blue'>比賽地址：<%=holdgame.address %></font><br>
-   <font color ='blue'>開始日期：<%=holdgame.startdate %></font><br>
+   <% if holdgame.gamedays==1 %>
+       <font color ='blue'>比賽日期：<%=holdgame.startdate %></font><br>
+   <% else %>
+      <font color ='blue'>比賽日期：<%=holdgame.startdate %>~<%=holdgame.enddate %></font><br>
+   <% end %>    
     <font color ='blue'>比賽類型：<%=holdgame.gametype %></font><br>
    <font color ='blue'>主辦人：  <%=holdgame.contact_name %></font><br>
    <font color ='blue'>連絡電話：<%=holdgame.contact_phone %></font><br>

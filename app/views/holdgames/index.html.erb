@@ -30,7 +30,11 @@
           <% @holdgames.each do |holdgame| %>
             <tr>
                 <td><%= holdgame.gamename %></td>
-                <td><%= holdgame.startdate.strftime('%F') %></td>
+                <% if holdgame.gamedays==1 %>
+                    <td><%= holdgame.startdate.strftime('%F') %></td>
+                <%else%>
+                  <td><%= holdgame.startdate.strftime('%F') %>~<%= holdgame.enddate.strftime('%F') %></td>
+                <%end%>    
                 <td><%= holdgame.gameholder.courtname %></td>
                 <td><%= holdgame.gameholder.name %></td>
                 <td>

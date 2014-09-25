@@ -20,7 +20,7 @@
           </div>
         </div>
         <div style="padding-top:30px" class="panel-body" >
-          <%= form_for(@holdgame,:html =>{:class =>"form-horizontal form-inline",:role =>"form" }) do |f| %>
+          <%= form_for(@holdgame,:html =>{:class =>"form-horizontal",:role =>"form" }) do |f| %>
             <% if @holdgame.errors.any? %>
               <div id="error_explanation">
                 <h2><%= pluralize(@holdgame.errors.count, "error") %> prohibited this holdgame from being saved:</h2>
@@ -33,36 +33,41 @@
               </div>
             <% end %>
             <div class="form-group">
-              <div class="col-xs-12 col-md-12 col-lg-12">
+              <div class="col-xs-10 col-md-12 col-lg-10">
                 <%= f.label '比賽名稱:' %>
                 <%= f.text_field :gamename ,:size=>"50" %>
               </div>
             </div>
+            <div class="col-xs-10 col-md-12 col-lg-10"><br></div>
             <div class="form-group">
-              <div class="col-xs-12 col-md-12 col-lg-12">
+              <div class="col-xs-12 col-md-12 col-lg-10">
                 <%= f.label '比賽類型:' %>
                 <%= f.select :gametype, ['桌盟積分賽','桌盟團體友誼賽','桌盟雙打友誼賽','桌盟個人友誼賽','業餘桌球好手之家積分賽','鄉鎮級錦標賽','縣市級錦標賽','全國性錦標賽','國際性比賽','裁判及教練講習','桌球訓練營隊','其他賽事或活動'] ,:size=>"50" %>
               </div>
             </div>
-
-
-
+            <div class="col-xs-10 col-md-12 col-lg-10"><br></div>
             <div class="form-group">
-              <div class="col-xs-12 col-md-12 col-lg-12">
+              <div class="col-xs-10 col-md-12 col-lg-10">
                 <%= f.label '比賽日期:' %>
                 <%= f.text_field :startdate ,:size=>"50" %>
               </div>
             </div>
-
-  
+             <div class="col-xs-10 col-md-12 col-lg-10"><br></div>
+              <div class="form-group">
+              <div class="col-xs-10 col-md-12 col-lg-10">
+                <%= f.label '比賽天數' %>
+                <%= f.number_field :gamedays ,:size=>"50" %>
+              </div>
+            </div>
+            <div class="col-xs-10 col-md-12 col-lg-10"><br></div>
             <div class="form-group">
-              <div class="col-xs-12 col-md-12 col-lg-12">
+              <div class="col-xs-10 col-md-12 col-lg-10">
                 <br>
                  <div class="col-xs-12 col-md-12 col-lg-12 md-push-right">
                 <%= f.text_area :gamenote , :cols => "100%", :rows => 20, :placeholder => '請輸入詳細比賽說明資料' %>
               </div>
             </div>  
-
+            <div class="col-xs-10 col-md-12 col-lg-10"><br></div>
             <div class="actions">
                <%= f.submit "登錄比賽", :class => "btn btn-block btn-info", :id => "btn-signup" do%>
                 <i class="icon-hand-right"></i>

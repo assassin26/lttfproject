@@ -7,7 +7,7 @@ class GamesmapsController < ApplicationController
   def index
     @citiesarray=TWZipCode_hash.keys
 
-    @holdgames=Holdgame.forgamesmaps.where("startdate >= ? ", Time.zone.now.to_date)
+    @holdgames=Holdgame.forgamesmaps.where("enddate >= (?)", Time.zone.now.to_date)
     @holdgames_hash=Array.new
     @hash  = Gmaps4rails.build_markers @holdgames do |holdgame, marker|
       marker.lat(holdgame.lat)
@@ -44,7 +44,8 @@ class GamesmapsController < ApplicationController
  def lttfgamesindex
  @citiesarray=TWZipCode_hash.keys
 
-    @holdgames=Holdgame.forgamesmaps.where("startdate >= ? ", Time.zone.now.to_date).where(:lttfgameflag => true)
+    #@holdgames=Holdgame.forgamesmaps.where("startdate+gamedays >= ? ", Time.zone.now.to_date).where(:lttfgameflag => true)
+    @holdgames=Holdgame.forgamesmaps.where("enddate >= (?)", Time.zone.now.to_date).where(:lttfgameflag => true)
     @holdgames_hash=Array.new
     @hash  = Gmaps4rails.build_markers @holdgames do |holdgame, marker|
       marker.lat(holdgame.lat)
@@ -90,6 +91,7 @@ class GamesmapsController < ApplicationController
   def new
     gon.action='new'
     @holdgame = Holdgame.new
+    @holdgame.gamedays=1
     @citiesarray=TWZipCode_hash.keys
     @countiesarray=TWZipCode_hash[@citiesarray[0]].keys
     @holdgame.address= @citiesarray[0]+@countiesarray[0]
