@@ -80,6 +80,7 @@
 
      <td><%= button_to '刪除此分組', holdgame_gamegroup_path(@holdgame, gamegroup),
                               :method => :delete, data: { confirm: '確定刪除此分組資料?' } %></td>
+    
   <% end %>                            
 
        
@@ -113,7 +114,7 @@
           <th>會員編號</th>
           <th>會員姓名</th>
           <th>目前積分</th>
-          <th>備註</th>
+          <th>備註/報名積分</th>
           <th></th>
           </tr>
         </thead>  
@@ -129,17 +130,24 @@
                 <td><%= player.player_id %></td>
                 <td>
                   <%= link_to(playerprofile_path(player.player_id)) do %>
-                    <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"><%=  player.name  %></font>
+                    <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"><%=  player.name %></font>
                   <% end %>
                 </td>
-                <td><%= player.curscore %></td>
-                <%if (serial+1)>gamegroup.noofplayers%>
-                  <td><font color='red'>候補</font></td>
-                <%else%>
-                  <td>正選</td>
-                <%end%>
+                <td><%= @player_current_score[player.player_id] %></td>
                 <td>
-                    <% if current_user && (player.player_id==current_user.id ||  player.registor_id==current_user.id ||@holdgame.gameholder_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser) )  %>
+                <%if (serial+1)>gamegroup.noofplayers%>
+                 <font color='red'>候補</font>
+                <%else%>
+                  正選
+                <%end%>
+
+                <%if @player_current_score[player.player_id]!= player.curscore %>
+                 <br>
+                 <font color='red'>(<%= player.curscore %>)</font>
+                <%end%>
+                </td>
+                <td>
+                    <% if current_user && (player.player_id==current_user.id ||  player.registor_id==current_user.id ||@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser) )  %>
                  
                       <%= button_to '取消報名', cancel_player_registration_holdgame_gamegroups_path(@holdgame, gamegroup, :user_in_groupattendant=>gamegroup.find_player_in_attendants(player.player_id)) ,  {:onclick => "return confirm('確定取消報名?')", :method => :post}  %>
                     <%end%>

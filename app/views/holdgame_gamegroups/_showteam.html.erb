@@ -129,7 +129,7 @@
                 <tr>
                 <td colspan=4 > <%= row_group[0].teamname %></td>
                 </tr>
-                <% if row_group[0].registor_id==current_user.id ||@holdgame.gameholder_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser)   %>
+                <% if row_group[0].registor_id==current_user.id ||@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser)   %>
                
                 <tr>
                 <td colspan=4 >
@@ -146,7 +146,8 @@
                 <td> <%=  player.player_id  %></td>
                 <td>
                   <%= link_to(playerprofile_path(player.player_id)) do %>
-                    <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"><%=  player.name  %></font>
+                    <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"><%=  player.name %></font><br> 
+                    <font color="red">( <%= @player_current_score[player.player_id]%>) </font>
                   <% end %>
                 </td>
                 <td> <%=  player.curscore %></td>

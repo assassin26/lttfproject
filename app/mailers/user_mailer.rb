@@ -3,7 +3,12 @@
   default :from => "lttfadmin@twlttf.org"
   require 'koala'
   
-
+  def sendgamenotice(holdgame,player,subject,message)
+    @player=player
+    @holdgame=holdgame
+    @message=message
+    mail(:to => "#{player.name} <#{player.email}>", :subject =>subject)
+  end 
   def post_to_LTTF (messagetofb , nameoflink,pathlink, access_token)
     
     #oauth_access_token = access_token

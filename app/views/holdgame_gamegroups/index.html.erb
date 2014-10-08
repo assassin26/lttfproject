@@ -75,6 +75,7 @@
    <td><%= button_to '新增比賽分組', new_holdgame_gamegroup_path(@holdgame), :method => :get  %></td>
    <td> <%= link_to "輸入比賽成績", @holdgame.inputfileurl ,:target=> '_blank' , :class=> "button radius" %></td>
    <td> <%= button_to "上傳比賽成績", uploadfile_fromholdgame_uploadgames_path(@holdgame), {:onclick => "return confirm('請確認已輸入比賽成績後再上傳?')", :method => :get}   %></td>
+    <td>  <%= link_to "寄通知信", preparesendmail_holdgame_gamegroups_path(@holdgame),:class=> "button radius" %></td>
  <%end%>  
  </tr>
 </table>

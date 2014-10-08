@@ -16,6 +16,8 @@ Lttfproject::Application.routes.draw do
           get :singlegroupregistration
           put :update
           get :groupdumptoxls
+          get :preparesendmail
+          post :sendemail
          end  
         
       end

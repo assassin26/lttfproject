@@ -13,13 +13,22 @@ def index
     #@gamegroup=@holdgame.gamegroups.first
   else
     @targetgroup_id=params[:targroupid].to_i
-  end  
+  end 
 
+  @player_current_score=Hash.new
+  @gamegroups.each do |gamegroup|
+     gamegroup.allgroupattendee.flatten.each do |player|
+      if player
+         @player_current_score[player.player_id]=User.find(player.player_id).playerprofile.curscore 
+      end   
+   end
+  end
 
 end
 def create_attendee_array(gamegroups)
   @attendee_array=Hash.new
   @user_in_groups=Hash.new
+  @user_current_score=Hash.new
   gamegroups.each do |gamegroup|
     @group_attendee_array=Array.new
 
@@ -35,11 +44,11 @@ def create_attendee_array(gamegroups)
           else
             @user_in_groups[gamegroup.id]=nil
           end  
-       
+         
       end  
     end
 
-
+    
     @attendee_array[gamegroup.id]=@group_attendee_array
   end
 
@@ -57,7 +66,52 @@ def check_user_meetgroupqualify(gamegroups, player_id)
   return user_meet_groups
 end
 
+def preparesendmail
+   @message= params[:message]
+   @subject= params[:subject]
+   @gamegroups = @holdgame.gamegroups
+   gon.gamegroups=@gamegroups 
+   @player_email=Hash.new
+   @backupplayerlist=Array.new
+   @gamegroups.each do |gamegroup|
+     gamegroup.allgroupattendee.flatten.each do |player|
+       @player_email[player.player_id]=false
+     end 
+      groupbackup=gamegroup.allgroupattendee.in_groups_of(gamegroup.noofplayers,false)[1]
+      if groupbackup
+        @backupplayerlist=@backupplayerlist+groupbackup.flatten 
+      end  
+   end
+   gon.player_email=@player_email
+   @backupplayerIDlist=Array.new
+   @backupplayerlist.flatten.each do |player|
+     @backupplayerIDlist.push(player.player_id.to_s) 
 
+   end 
+
+   gon.backupplayerlist=@backupplayerlist
+   gon.backupplayerIDlist = @backupplayerIDlist
+   #@groupttendee= @gamegroup.groupattendants
+   #@attendee =@gamegroup.allgroupattendee
+end 
+def sendemail
+
+  subject=params[:subject]
+  message=params[:message]
+  playersemail=params[:playersemail]
+  @gamegroups = @holdgame.gamegroups
+  @gamegroups.each do |gamegroup|
+    gamegroup.allgroupattendee.flatten.each do |player|
+
+      if player
+        if  playersemail[player.player_id.to_s]=="1"
+          UserMailer.sendgamenotice(@holdgame, player, subject,message).deliver   
+        end 
+      end 
+     end 
+   end
+  redirect_to  preparesendmail_holdgame_gamegroups_path(@holdgame, :subject=>subject , :message=>message)
+end  
 
 def registration
 
@@ -333,6 +387,9 @@ def new
  
   @gamegroup = @holdgame.gamegroups.build
   @gamegroup.starttime=@holdgame.startdate.to_date
+  @gamegroup.scorelow=0
+  @gamegroup.scorehigh=2500
+
 end
 
 def create
