@@ -191,11 +191,11 @@ class UploadgamesController < ApplicationController
       @playergames=@gamesrecords.find_all{|v| (v["Aplayer"]==player["name"])||(v["Bplayer"]==player["name"])}
       @user=User.find(player["id"].to_i)
       @player=player
-      UserMailer.gamerecords_publish_notice(@user, @player, @playergames, @uploadgame.gamename).deliver
+      UserMailer.gamerecords_publish_notice(@user, @player, @playergames, uploadgame).deliver
      
     end  
      
-     UserMailer.gamerecords_publish_notice_to_FB( @uploadgame.gamename,  session[:access_token]).deliver  if  session[:access_token]
+     UserMailer.gamerecords_publish_notice_to_FB( uploadgame,  session[:access_token]).deliver  if  session[:access_token]
   end
   def publishuploadgame
 
@@ -219,7 +219,6 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
     User.transaction do
       adjustplayers.each  do |player|
         @player=User.find(player["id"].to_i)
-      
         if player["bgamescore"]!= player["original bscore"]  #賽前積分不等候原來績分,表示需前作調整
           if @player.playerprofile.initscore ==0        #初始積分為0,前置調整當作賦予初始積分不是前置調整
             @player.playerprofile.initscore=player["bgamescore"].to_i 
@@ -242,7 +241,7 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
           end
           @player.save 
           @playerscore=player 
-          UserMailer.adjustscore_publish_notice(@player,@playerscore,@uploadgame.gamename).deliver
+          UserMailer.adjustscore_publish_notice(@player,@playerscore,@uploadgame).deliver
         end
       end
     end
@@ -291,6 +290,7 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
           else
                @player.playerprofile.gamehistory=@player.playerprofile.gamehistory+"\n"+date.to_date.to_s+"("+player["agamescore"].to_s+")" 
           end  
+
           @player.save
           @playerscore=player
           UserMailer.newscore_publish_notice(@player,@playerscore,@uploadgame.gamename).deliver
@@ -299,7 +299,7 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
     end
      @newgame.players_result=curlines  
      @newgame.save
-     UserMailer.newscore_publish_notice_to_FB( @newgame.gamename,  session[:access_token]).deliver  if session[:access_token]
+     UserMailer.newscore_publish_notice_to_FB( @newgame,  session[:access_token]).deliver  if session[:access_token]
   end  
  
   def trycalculation

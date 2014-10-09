@@ -1,7 +1,7 @@
 # encoding: UTF-8”
 require 'google_drive'
 class Playerprofile < ActiveRecord::Base
-  after_create :add_name
+  before_create :add_name
   # attr_accessible :title, :body
   belongs_to :user
   attr_accessible :name, :initscore, :curscore, :totalwongames,  :totallosegames, :lastgamedate, :lastgamename, :lastscoreupdatedate, :gamehistory, :profileurl
@@ -9,11 +9,11 @@ class Playerprofile < ActiveRecord::Base
    def add_name
     self.name=self.user.username if !self.name
     if self.initscore!=0
-     self.gamehistory=self.created_at.to_date.to_s+"("+self.initscore.to_s+")" 
+     self.gamehistory=self.user.created_at.to_date.to_s+"("+self.initscore.to_s+")" 
     end 
-    self.lastscoreupdatedate=self.created_at.to_date
+    self.lastscoreupdatedate=self.user.created_at.to_date
     self.curscore=self.initscore
-    self.save
+    #self.save
   end	
   def self.findlastrow(worksheet, targetcol)
     @ws_row=worksheet.num_rows

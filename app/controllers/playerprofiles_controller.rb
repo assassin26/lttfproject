@@ -129,12 +129,12 @@ class PlayerprofilesController < ApplicationController
   # POST /playerprofiles
   # POST /playerprofiles.json
   def create
-  #@playerprofile = current_user.playerprofile.build(params[:playerprofile])
-  @playerprofile = Playerprofile.where( :user_id => current_user.id).first
-  @playerprofile.name=current_user.username
-  @playerprofile.save
-  @User=
-  UserMailer.registration_confirmation(self).deliver
+   
+  @playerprofile = current_user.playerprofile.build(params[:playerprofile])
+  #@playerprofile = Playerprofile.where( :user_id => current_user.id).first
+  #@playerprofile.name=current_user.username
+  
+  
 
     respond_to do |format|
       if @playerprofile.save
