@@ -38,7 +38,7 @@ class Uploadgame < ActiveRecord::Base
     (player_info_start_row..player_info_start_row+@NoofPlayers-1).each do |i|
       @Curplayer=Array.new(9)
       @Curplayer[0] = gameinfows[i,1] #serial
-      @Curplayer[1] = gameinfows[i,2].strip #name
+      @Curplayer[1] = gameinfows[i,2].delete(' ') #name
       puts @Curplayer[0].to_s
       puts @Curplayer[1]
       Rails.logger.info(i.to_s)
