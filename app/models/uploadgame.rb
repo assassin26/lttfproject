@@ -39,8 +39,6 @@ class Uploadgame < ActiveRecord::Base
       @Curplayer=Array.new(9)
       @Curplayer[0] = gameinfows[i,1] #serial
       @Curplayer[1] = gameinfows[i,2].delete(' ') #name
-      puts @Curplayer[0].to_s
-      puts @Curplayer[1]
       Rails.logger.info(i.to_s)
       Rails.logger.info(@Curplayer[0].to_s)
       Rails.logger.info(@Curplayer[1])
@@ -99,8 +97,8 @@ class Uploadgame < ActiveRecord::Base
             @SingleGame=Array.new(5)
        	    playerAno=ws[i,playerNocol]
             playerBno=ws[i+1,playerNocol]
-       	    playerA =ws[i,gameplayercol]
-       	    playerB =ws[i+1,gameplayercol]
+       	    playerA =ws[i,gameplayercol].delete(' ')
+       	    playerB =ws[i+1,gameplayercol].delete(' ')
        	    gamepointsA=ws[i,resultcol]
        	    gamepointsB=ws[i+1,resultcol]
        	    gameListA.clear
