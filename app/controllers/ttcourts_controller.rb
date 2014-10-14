@@ -5,6 +5,7 @@ class TtcourtsController < ApplicationController
   layout :resolve_layout
 
   def index
+
     @citiesarray=TWZipCode_hash.keys
     @ttcourts = Ttcourt.all
     @ttcourts_hash=Array.new
@@ -150,6 +151,7 @@ class TtcourtsController < ApplicationController
     private
 
   def resolve_layout
+
     case action_name
     
     when "index" 

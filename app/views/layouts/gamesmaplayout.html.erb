@@ -10,6 +10,12 @@
       <%= render_page_keywords_meta_tag %>
       <%= render_page_image_link_tag %>
       <%= csrf_meta_tag %>
+      <% if controller.controller_name =='lttfgamesindex' %>
+        <% SeoHelper.configuration.default_page_description="桌球愛好者聯盟積分賽地圖" %> 
+      <%else%>
+        <% SeoHelper.configuration.default_page_description="桌球愛好者聯盟積分賽台灣地區桌球比賽地圖" %> 
+      <%end%> 
+    
       <meta property="og:title" content="<%= page_title || SeoHelper.configuration.site_name %>"/>
       <meta property="og:description" content="<%= page_description || SeoHelper.configuration.default_page_description %>"/>
       <meta property="og:image:url" content="<%= page_image || SeoHelper.configuration.default_page_image %>"/>
@@ -48,9 +54,9 @@
           <div class="col-xs-offset-12 col-xs-1 col-md-offset-12 col-md-2">
 
             <ul id="sidebar" class="nav nav-stacked affix hidden-xs" >
-              <li><font color="red" size="1"><strong>廣告欄位出租!意者請洽李組長</strong></font></li>
+              <li><font color="red" size="1"><strong>廣告出租!請洽李組長</strong></font></li>
               <li><a  href= "http://www.pcstore.com.tw/ilovemama/M00464699.htm"><img src="/images/chrisadv.gif" class="img-responsive" alt="LTTF Logo"></a></li>
-              <li><a  href= "/"><img src="/images/lttf_logo_120x80.jpg" class="img-responsive" alt="LTTF Logo"></a></li>
+              <li><a  href= "http://www.plusmore.com.tw"><img src="/images/adv2.jpg" class="img-responsive" alt="LTTF Logo"></a></li>
               <li><a  href= "/"><img src="/images/lttf_logo_120x80.jpg" class="img-responsive" alt="LTTF Logo"></a></li>
               <li><a  href= "/"><img src="/images/lttf_logo_120x80.jpg" class="img-responsive" alt="LTTF Logo"></a></li>
               <li><a  href= "/"><img src="/images/lttf_logo_120x80.jpg" class="img-responsive" alt="LTTF Logo"></a></li>
