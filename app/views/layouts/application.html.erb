@@ -1,23 +1,18 @@
 <!DOCTYPE html>
 <html>
   <head>
-    
-    <title>桌球愛好者聯盟</title>
-      <%= stylesheet_link_tag    "application", media: "all" %>
-      <%= csrf_meta_tags %>
 
-      <%= render_page_description_meta_tag %>
-      <%= render_page_keywords_meta_tag %>
-      <%= render_page_image_link_tag %>
+   
+      <%= stylesheet_link_tag    "application", media: "all" %>
+
       <%= csrf_meta_tag %>
-    
-      <meta property="og:title" content="<%= page_title || SeoHelper.configuration.site_name %>"/>
-      <meta property="og:description" content="<%= page_description || SeoHelper.configuration.default_page_description %>"/>
-      <meta property="og:image:url" content="<%= page_image || SeoHelper.configuration.default_page_image %>"/>
-      <meta charset="utf-8">
+       
+      <%= display_meta_tags(default_meta_tags) %>                
+     
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <link rel="shortcut icon" href="/images/lttficon.ico">
+      
 
       <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
       <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

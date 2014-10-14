@@ -1,24 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
-    
-    <title>桌球愛好者聯盟桌球比賽地圖</title>
-      <%= stylesheet_link_tag    "application", media: "all" %>
-      <%= csrf_meta_tags %>
 
-      <%= render_page_description_meta_tag %>
-      <%= render_page_keywords_meta_tag %>
-      <%= render_page_image_link_tag %>
+
+      <%= stylesheet_link_tag    "application", media: "all" %>
       <%= csrf_meta_tag %>
-      <% if controller.controller_name =='lttfgamesindex' %>
-        <% SeoHelper.configuration.default_page_description="桌球愛好者聯盟積分賽地圖" %> 
+      <% if controller.action_name == 'lttfgamesindex' %>
+        <%= display_meta_tags(default_lttfgamesmap_meta_tags) %>  
+        <link rel="canonical" href= 'http://twlttf.org/lttfproject/gamesmaps/lttfgamesindex' /> 
       <%else%>
-        <% SeoHelper.configuration.default_page_description="桌球愛好者聯盟積分賽台灣地區桌球比賽地圖" %> 
-      <%end%> 
-    
-      <meta property="og:title" content="<%= page_title || SeoHelper.configuration.site_name %>"/>
-      <meta property="og:description" content="<%= page_description || SeoHelper.configuration.default_page_description %>"/>
-      <meta property="og:image:url" content="<%= page_image || SeoHelper.configuration.default_page_image %>"/>
+        <%= display_meta_tags(default_gamesmap_meta_tags) %>  
+        <link rel="canonical" href= 'http://twlttf.org/lttfproject/gamesmaps' /> 
+      <%end%>       
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">

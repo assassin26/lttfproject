@@ -1,5 +1,5 @@
 defaults: &defaults
-  app_name: "桌球愛好者聯盟積分系統"
+  app_name: "桌球愛好者聯盟"
   domain: ""
   facebook_app_id:
   facebook_secret:

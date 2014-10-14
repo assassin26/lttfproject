@@ -56,7 +56,8 @@ gem 'koala'
 
 # the following section is added by Josh
 # section for seo
-gem 'seo_helper', '~> 1.0.2'
+#gem 'seo_helper', '~> 1.0.2'
+gem 'meta-tags', '~> 2.0.0'
 gem 'open_graph_helper'
 # Fetch settings
 gem 'settingslogic'
