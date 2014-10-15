@@ -69,6 +69,58 @@
      )
    
   end
+  def getscorestring(gamegroup)
+    case gamegroup.scorelimitation
+      when '無積分限制'
+       return '無'
+      when '限制高低分' 
+        return gamegroup.scorelow.to_s+'~'+gamegroup.scorehigh.to_s 
+      when '限制最高分'
+        return '小於'+gamegroup.scorehigh.to_s 
+      when '限制最低分'
+        return '大於'+gamegroup.scorelow.to_s
+    end  
+   
+  end
+  def newholdgame_publish_notice_to_FB ( holdgame,access_token)
+    
+    @gamename=holdgame.gamename
+    @holdgame=holdgame
+    @message="桌球愛好者聯盟新增賽事公告\n"+
+          "各位盟友，#{@gamename}已開始接受報名\n"+
+           "請符合參賽資格且欲參賽之盟友儘速前往以下網址報名。\n"+
+           "此事分組如下\n"
+          
+    @gamegroups = @holdgame.gamegroups
+    if !@gamegroups.empty?
+        @gamegroups.each do |gamegroup|
+          @message=@message+
+                   "=======================\n"+
+                   "組別:"+gamegroup.groupname+"\n"+
+                   "賽制："+gamegroup.grouptype+"\n"+
+                   "積分限制："+getscorestring(gamegroup)+"\n"+
+                   "預計參賽人數："+gamegroup.noofplayers.to_s+"\n"+
+                   "比賽時間："+gamegroup.starttime.strftime("%F %H:%M")+"\n"
+        end  
+    end  
+    #attachments["LTTF_logo.png"] = File.read("#{Rails.root}/public/LTTF_logo.png")
+    #mail(:to => "lttf.taiwan@gmail.com", :subject => "桌球愛好者聯盟#{gamename}比賽結果查核公告")
+    #mail(:to => "allen866129@gmail.com", :subject => "桌球愛好者聯盟#{gamename}比賽結果查核公告")
+    @message=@message+ "桌球愛好者聯盟敬上"
+    graph = Koala::Facebook::API.new(access_token )
+   
+    graph.put_wall_post(@message, {   
+     # "link" => "http://www.twlttf.org/lttfproject/uploadgames/gamescorechecking",
+     #"link" =>gamescorechecking_uploadgames_url,
+     "link" =>holdgame_gamegroups_url(holdgame),
+      "description" =>holdgame.gamename+"報名網頁" ,
+      "name" =>holdgame.gamename+"報名網頁" ,
+      "picture" => "httP://www.twlttf.org/lttfproject/public/LTTF_logo.png"  },
+      APP_CONFIG['LTTF_GROUP_ID']
+     )
+   
+  end
+ 
   def newscore_publish_notice ( user , gameplayer, gamename)
     @user = user
     @gameplayer=gameplayer

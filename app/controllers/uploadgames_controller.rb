@@ -9,7 +9,7 @@ class UploadgamesController < ApplicationController
  def facebook_auth
     
       if current_user && ((current_user.has_role? :superuser) || (current_user.has_role? :admin)) && !session[:access_token]
-        session[:oauth]= Koala::Facebook::OAuth.new(APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_ID'].to_s, APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_SECRET'],APP_CONFIG[APP_CONFIG['HOST_TYPE']]['REDIRECT_URI'])
+        session[:oauth]= Koala::Facebook::OAuth.new(APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_ID'].to_s, APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_SECRET'],APP_CONFIG[APP_CONFIG['HOST_TYPE']]['REDIRECT_URI_Uploadgames'])
         @auth_url =  session[:oauth].url_for_oauth_code(:permissions=> " manage_pages,publish_stream,user_groups,publish_actions")  
      
       end

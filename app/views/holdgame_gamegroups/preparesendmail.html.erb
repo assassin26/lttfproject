@@ -6,7 +6,8 @@
   <h3 align=center> 寄發通知信函-<%= @holdgame.gamename %></h3>
   <br>
    <font size='5' color='blue'><strong>
-  主旨：<%= text_field_tag  "subject", (@subject or ''), :size=> '60' %> <%= submit_tag "傳送", :name => nil %>
+  主旨：<%= text_field_tag  "subject", (@subject or ''), :size=> '60' %>
+   <%= submit_tag "傳送", :name => nil , :confirm=> '確認要傳送此封郵件通知所選取之參賽者?' %>
    </strong></font>
   <br>
   <%= text_area_tag 'message', (@message or ''), class: 'form-control', rows:20, placeholder: "請輸入郵件內容，但不需輸入球友姓名"  %>
