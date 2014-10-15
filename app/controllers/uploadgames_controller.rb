@@ -1,34 +1,13 @@
 # encoding: UTF-8”
 class UploadgamesController < ApplicationController
   before_filter :authenticate_user! ,:except=>[:gamescorechecking, :show]
-  before_filter :facebook_auth
-
    # GET /uploadgames
   # GET /uploadgames.json
-  require "koala"
- def facebook_auth
-      uri= callback_uploadgames_url
-      if current_user && ((current_user.has_role? :superuser) || (current_user.has_role? :admin)) && !session[:access_token]
-        #session[:oauth]= Koala::Facebook::OAuth.new(APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_ID'].to_s, APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_SECRET'],APP_CONFIG[APP_CONFIG['HOST_TYPE']]['REDIRECT_URI_Uploadgames'])
-        session[:oauth]= Koala::Facebook::OAuth.new(APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_ID'].to_s, APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_SECRET'],uri)
-        @auth_url =  session[:oauth].url_for_oauth_code(:permissions=> " manage_pages,publish_stream,user_groups,publish_actions")  
-     
-      end
-    
-  end
-  def callback
-   
-    if params[:code] 
-     session[:access_token] = session[:oauth].get_access_token(params[:code])
-    end 
-    
-     @uploadgames = Uploadgame.waitingforprocess.page(params[:page]).per(10)
-     redirect_to :action => "index"
-  end
+
   def index
   
       if current_user 
-        return redirect_to(@auth_url)   if ( (current_user.has_role? :superuser) || (current_user.has_role? :admin)) && !session[:access_token]
+        return redirect_to(@auth_url)   if ( (current_user.has_role? :superuser) || (current_user.has_role? :admin)||(current_user.has_role? :gameholder)) && !session[:access_token]
       end  
   
     @uploadgames = Uploadgame.waitingforprocess.page(params[:page]).per(10)

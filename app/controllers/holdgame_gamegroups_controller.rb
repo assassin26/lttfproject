@@ -3,35 +3,20 @@ class HoldgameGamegroupsController < ApplicationController
  before_filter :authenticate_user!, :except=>[:index,:teamplayersinput, :singleplayerinput, :doubleplayersinput, :cancel_player_registration, :update, :find_holdgame]
  layout :resolve_layout 
  before_filter :find_holdgame 
- before_filter :facebook_auth
 
- require "koala"
- def facebook_auth
-      uri= callback_holdgame_gamegroups_url(@holdgame)
-       if current_user && ((current_user.has_role? :superuser) || (current_user.has_role? :admin) ||(current_user.has_role? :gameholder)) && !session[:access_token]
-        session[:oauth]= Koala::Facebook::OAuth.new(APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_ID'].to_s, APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_SECRET'],uri)
-        @auth_url =  session[:oauth].url_for_oauth_code(:permissions=> " manage_pages,publish_stream,user_groups,publish_actions")  
-     
-      end
-    
-  end
-  def callback
-   
-    if params[:code] 
-     session[:access_token] = session[:oauth].get_access_token(params[:code])
-    end 
-    redirect_to :action => "index"
-  end
+
+
   def publishtoFB
-   
-     UserMailer.newholdgame_publish_notice_to_FB( @holdgame,  session[:access_token]).deliver  if  session[:access_token] 
-     flash[:success]="已將本賽事公告於桌盟FB!"
+    if  session[:access_token] 
+      UserMailer.newholdgame_publish_notice_to_FB( @holdgame,  session[:access_token]).deliver  if  session[:access_token] 
+      flash[:success]="已將本賽事公告於桌盟FB!"
+    else
+       flash[:error]="程式錯誤!無法將賽事公告於桌盟FB!"
+    end  
      redirect_to :action => "index"
   end 
 def index
-  if current_user 
-      return redirect_to(@auth_url)   if ( (current_user.has_role? :superuser) || (current_user.has_role? :admin)||(current_user.has_role? :gameholder)) && !session[:access_token]
-  end  
+ 
   @gamegroups = @holdgame.gamegroups
   if !params[:targroupid] && !@gamegroups.empty?
     @targetgroup_id=@gamegroups.first.id

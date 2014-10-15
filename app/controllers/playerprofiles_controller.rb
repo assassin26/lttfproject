@@ -2,9 +2,31 @@
 class PlayerprofilesController < ApplicationController
   before_filter :authenticate_user!  ,:find_user, :except=>[:show,:create,:index, :import, :search]
   helper_method :sort_column, :sort_direction
+   before_filter :facebook_auth
   # GET /playerprofiles
   # GET /playerprofiles.json
+ require "koala"
+ def facebook_auth
+       uri= callback_playerprofiles_url
+       puts uri
+       if current_user && ((current_user.has_role? :superuser) || (current_user.has_role? :admin) ||(current_user.has_role? :gameholder)) && !session[:access_token]
+        session[:oauth]= Koala::Facebook::OAuth.new(APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_ID'].to_s, APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_SECRET'],uri)
+        @auth_url =  session[:oauth].url_for_oauth_code(:permissions=> " manage_pages,publish_stream,user_groups,publish_actions")  
+     
+      end
+    
+  end
+  def callback
+   
+    if params[:code] 
+     session[:access_token] = session[:oauth].get_access_token(params[:code])
+    end 
+    redirect_to :action => "index"
+  end
   def index
+       if current_user 
+        return redirect_to(@auth_url)   if ( (current_user.has_role? :superuser) || (current_user.has_role? :admin)||(current_user.has_role? :gameholder)) && !session[:access_token]
+      end  
     #@playerprofiles = Playerprofile.all
      @playerprofiles = Playerprofile.includes(:user).order(sort_column + " " + sort_direction).page(params[:page]).per(50)
 
