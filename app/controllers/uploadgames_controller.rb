@@ -7,9 +7,10 @@ class UploadgamesController < ApplicationController
   # GET /uploadgames.json
   require "koala"
  def facebook_auth
-    
+      uri= callback_uploadgames_url
       if current_user && ((current_user.has_role? :superuser) || (current_user.has_role? :admin)) && !session[:access_token]
-        session[:oauth]= Koala::Facebook::OAuth.new(APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_ID'].to_s, APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_SECRET'],APP_CONFIG[APP_CONFIG['HOST_TYPE']]['REDIRECT_URI_Uploadgames'])
+        #session[:oauth]= Koala::Facebook::OAuth.new(APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_ID'].to_s, APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_SECRET'],APP_CONFIG[APP_CONFIG['HOST_TYPE']]['REDIRECT_URI_Uploadgames'])
+        session[:oauth]= Koala::Facebook::OAuth.new(APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_ID'].to_s, APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_SECRET'],uri)
         @auth_url =  session[:oauth].url_for_oauth_code(:permissions=> " manage_pages,publish_stream,user_groups,publish_actions")  
      
       end
@@ -342,7 +343,7 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
         end
       end
       @uploadgames = Uploadgame.waitingforprocess.page(params[:page]).per(10)
-      flash[:alert]=""
+      flash[:success]="積分更新作業完成!"
        redirect_to :action => "index"
     end
   end

@@ -7,9 +7,9 @@ class HoldgameGamegroupsController < ApplicationController
 
  require "koala"
  def facebook_auth
-    
-      if current_user && ((current_user.has_role? :superuser) || (current_user.has_role? :admin) ||(current_user.has_role? :gameholder)) && !session[:access_token]
-        session[:oauth]= Koala::Facebook::OAuth.new(APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_ID'].to_s, APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_SECRET'],APP_CONFIG[APP_CONFIG['HOST_TYPE']]['REDIRECT_URI_Holdgames'])
+      uri= callback_holdgame_gamegroups_url(@holdgame)
+       if current_user && ((current_user.has_role? :superuser) || (current_user.has_role? :admin) ||(current_user.has_role? :gameholder)) && !session[:access_token]
+        session[:oauth]= Koala::Facebook::OAuth.new(APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_ID'].to_s, APP_CONFIG[APP_CONFIG['HOST_TYPE']]['APP_SECRET'],uri)
         @auth_url =  session[:oauth].url_for_oauth_code(:permissions=> " manage_pages,publish_stream,user_groups,publish_actions")  
      
       end
