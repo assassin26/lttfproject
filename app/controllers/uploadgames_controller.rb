@@ -6,10 +6,7 @@ class UploadgamesController < ApplicationController
 
   def index
   
-      if current_user 
-        return redirect_to(@auth_url)   if ( (current_user.has_role? :superuser) || (current_user.has_role? :admin)||(current_user.has_role? :gameholder)) && !session[:access_token]
-      end  
-  
+
     @uploadgames = Uploadgame.waitingforprocess.page(params[:page]).per(10)
    
     respond_to do |format|

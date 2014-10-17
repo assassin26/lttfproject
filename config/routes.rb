@@ -18,6 +18,7 @@ Lttfproject::Application.routes.draw do
           get :groupdumptoxls
           get :preparesendmail
           post :sendemail
+          get :publishtoFB
          end  
         
       end
@@ -36,7 +37,6 @@ Lttfproject::Application.routes.draw do
       post :trycalculation
       post :caculatescore
       get  :gamescorechecking
-      get  :callback
     end
     member do
       post :calculategamepage
@@ -58,7 +58,8 @@ devise_for :users, :controllers => { :registrations => 'users/registrations' }
      collection do
        post :import 
        get :search
-       get :googleplayerlist      
+       get :googleplayerlist   
+       get :callback   
      end   
   end
   root :to => "playerprofiles#index"

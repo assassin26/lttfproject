@@ -89,7 +89,7 @@
     @message="桌球愛好者聯盟新增賽事公告\n"+
           "各位盟友，#{@gamename}已開始接受報名\n"+
            "請符合參賽資格且欲參賽之盟友儘速前往以下網址報名。\n"+
-           "此事分組如下\n"
+           "此項比賽分組如下\n"
           
     @gamegroups = @holdgame.gamegroups
     if !@gamegroups.empty?
@@ -108,6 +108,7 @@
     #mail(:to => "allen866129@gmail.com", :subject => "桌球愛好者聯盟#{gamename}比賽結果查核公告")
     @message=@message+ "桌球愛好者聯盟敬上"
     graph = Koala::Facebook::API.new(access_token )
+   
    
     graph.put_wall_post(@message, {   
      # "link" => "http://www.twlttf.org/lttfproject/uploadgames/gamescorechecking",
