@@ -37,7 +37,7 @@ gem 'pry', :group => :development
 gem "pry-nav" ,:group => :development
 # To use debugger
 # gem 'debugger'
-gem "devise"
+gem "devise", :git => "git://github.com/plataformatec/devise.git"
 gem 'database_cleaner'
 gem 'cancan'
 gem 'rolify'
@@ -71,3 +71,6 @@ gem 'gmaps4rails'
 gem 'gon'
 gem 'signet', '>= 0.5.0'
 gem 'google-api-client'
+gem 'omniauth'
+gem 'omniauth-oauth2'
+gem 'omniauth-facebook'

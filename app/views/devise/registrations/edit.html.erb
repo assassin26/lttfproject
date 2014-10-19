@@ -146,6 +146,22 @@
     </div>
   </div>
 </div>
+<div>
+Connect Account
+
+
+
+<% ['facebook'].each do |provider| %>
+
+  <% if current_user.authorizations.pluck(:provider).include?(provider.to_s) %>
+    <%= provider.to_s.titleize %> Connected
+  <% else %>
+      <%= link_to "Sign in with #{provider.to_s.titleize}", user_omniauth_authorize_path(provider) %>
+  <% end %>
+<br/>
+<% end %>
+
+</div>
 <p align=center><%= link_to '返回前頁', :back %></p>
 
 

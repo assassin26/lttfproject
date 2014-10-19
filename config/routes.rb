@@ -49,11 +49,12 @@ Lttfproject::Application.routes.draw do
 
 
 
+devise_for :users, :controllers => {:registrations => 'users/registrations',:omniauth_callbacks => 'users/omniauth_callbacks' }
+#devise_for :users, :controllers => { :registrations => 'users/registrations'}  
 
-devise_for :users, :controllers => { :registrations => 'users/registrations' } 
   devise_scope :user do
       resources :users 
-   end
+  end
   resources :playerprofiles do
      collection do
        post :import 
