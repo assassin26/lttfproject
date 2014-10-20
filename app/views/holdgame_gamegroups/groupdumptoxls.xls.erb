@@ -44,7 +44,6 @@
           <Cell><Data ss:Type="String">會員目前積分</Data></Cell>
           <Cell><Data ss:Type="String">備註</Data></Cell>
         </Row>
-        <%binding.pry%>
         <% @attendee.each_with_index do |row_group,groupindex| %> 
           <Row>
             <Cell><Data ss:Type="Number"><%= groupindex+1 %></Data></Cell>
