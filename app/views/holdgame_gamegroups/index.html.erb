@@ -76,7 +76,9 @@
    <td> <%= link_to "輸入成績", @holdgame.inputfileurl ,:target=> '_blank' , :class=> "button radius" %></td>
    <td> <%= button_to "上傳成績", uploadfile_fromholdgame_uploadgames_path(@holdgame), {:onclick => "return confirm('請確認已輸入比賽成績後再上傳?')", :method => :get}   %></td>
    <td>  <%= link_to "寄通知信", preparesendmail_holdgame_gamegroups_path(@holdgame),:class=> "button radius" %></td>
+   <% if current_user.authorizations.pluck(:provider).include?("facebook") %>
    <td>  <%= link_to "公告於桌盟", publishtoFB_holdgame_gamegroups_path,:class=> "button radius", :confirm=>'確認張貼本賽事公告於桌盟FB?' %></td>
+   <%end%>
  <%end%>  
  </tr>
 </table>

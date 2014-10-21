@@ -11,6 +11,7 @@ end
 
 module Lttfproject
   class Application < Rails::Application
+    
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -59,11 +60,12 @@ module Lttfproject
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
     config.assets.initialize_on_precompile = false
-    social_keys = File.join(Rails.root, 'config', 'social_keys.yml')
-    CONFIG = HashWithIndifferentAccess.new(YAML::load(IO.read(social_keys)))[Rails.env]
-    CONFIG.each do |k,v|
-      ENV[k.upcase] ||= v
-    end
+    
+    #social_keys = File.join(Rails.root, 'config', 'social_keys.yml')
+    #CONFIG = HashWithIndifferentAccess.new(YAML::load(IO.read(social_keys)))[Rails.env]
+    #CONFIG.each do |k,v|
+    #  ENV[k.upcase] ||= v
+    #end
 
   end
 end

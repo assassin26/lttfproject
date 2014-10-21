@@ -147,16 +147,12 @@
   </div>
 </div>
 <div>
-Connect Account
-
 
 
 <% ['facebook'].each do |provider| %>
 
   <% if current_user.authorizations.pluck(:provider).include?(provider.to_s) %>
-    <%= provider.to_s.titleize %> Connected
-  <% else %>
-      <%= link_to "Sign in with #{provider.to_s.titleize}", user_omniauth_authorize_path(provider) %>
+    <%= provider.to_s.titleize %> 帳號已連結
   <% end %>
 <br/>
 <% end %>

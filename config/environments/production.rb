@@ -68,4 +68,6 @@ Lttfproject::Application.configure do
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
   config.i18n.available_locales = ['zh-TW']
+  railsroot=Rails.root.to_s
+  APP_CONFIG =YAML.load_file(railsroot+'/config/myappconfig.yml')[Rails.env]
 end

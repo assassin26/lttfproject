@@ -4,10 +4,27 @@
       <%= link_to "/account" , :class => "dropdown-toggle", :data => { :toggle => "dropdown" } do %>
       會員: <%= current_user.username %>
       <% end %>
-      <%= render_list :class => "dropdown-menu" do |li|
+      <% if !current_user.authorizations.pluck(:provider).include?('facebook') %>
+        <%= render_list :class => "dropdown-menu" do |li|
+
           li << link_to("修改個人資料",edit_registration_path(current_user))
-          li << link_to("登出",destroy_user_session_path, :method => :delete )
-      end %>
+         
+          li << link_to("設定facebook帳號連結", user_omniauth_authorize_path('facebook'))
+          
+          li << link_to("登出",destroy_user_session_path, :method => :delete ) 
+        end%>
+      <%else%>
+        <%= render_list :class => "dropdown-menu" do |li|
+
+          li << link_to("修改個人資料",edit_registration_path(current_user))
+
+          li << link_to("取消FB帳號連結",fbconnections_removefbconnect_path, :method=>:get, data: {confirm: "確定要取消FB帳號連結?"} )
+
+          li << link_to("登出",destroy_user_session_path, :method => :delete)
+        end%>
+
+      <%end%> 
+      
     </li>
   <% else %>
     <li>

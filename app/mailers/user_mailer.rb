@@ -107,7 +107,7 @@
     #mail(:to => "lttf.taiwan@gmail.com", :subject => "桌球愛好者聯盟#{gamename}比賽結果查核公告")
     #mail(:to => "allen866129@gmail.com", :subject => "桌球愛好者聯盟#{gamename}比賽結果查核公告")
     @message=@message+ "桌球愛好者聯盟敬上"
-    graph = Koala::Facebook::API.new(access_token )
+    graph = Koala::Facebook::API.new(access_token)
    
    
     graph.put_wall_post(@message, {   

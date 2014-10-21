@@ -77,6 +77,9 @@ devise_for :users, :controllers => {:registrations => 'users/registrations',:omn
       get :lttfgamesindex
      end
   end    
+  get "fbconnections/removefbconnect" => "fbconnections#removefbconnect"
+  get "fbconnections/resetfbconnect" => "fbconnections#resetfbconnect"
+  
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

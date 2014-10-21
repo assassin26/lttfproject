@@ -172,7 +172,7 @@ class UploadgamesController < ApplicationController
      
     end  
      
-     UserMailer.gamerecords_publish_notice_to_FB( uploadgame,  session[:access_token]).deliver  if  session[:access_token]
+     UserMailer.gamerecords_publish_notice_to_FB( uploadgame,   current_user.authorizations.where(:provider => 'facebook').last.token).deliver  if current_user.authorizations.pluck(:provider).include?('facebook')
   end
   def publishuploadgame
 
@@ -276,7 +276,7 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
     end
      @newgame.players_result=curlines  
      @newgame.save
-     UserMailer.newscore_publish_notice_to_FB( @newgame,  session[:access_token]).deliver  if session[:access_token]
+     UserMailer.newscore_publish_notice_to_FB( @newgame, current_user.authorizations.where(:provider => 'facebook').last.token).deliver  if current_user.authorizations.pluck(:provider).include?('facebook')
   end  
  
   def trycalculation

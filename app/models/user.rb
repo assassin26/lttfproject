@@ -47,6 +47,7 @@ def assign_default_photo
   end
 end
   def self.new_with_session(params,session)
+
     if session["devise.user_attributes"]
       new(session["devise.user_attributes"],without_protection: true) do |user|
         user.attributes = params
@@ -64,16 +65,20 @@ end
     if authorization.user.blank?
        user = current_user.nil? ? User.where(:fbaccount =>auth["info"]["name"], :email=>auth["info"]["email"]).first : current_user
      
-      if user.blank?
+      if !user || (user.blank?) || (current_user && user.username!=current_user.username)
         return nil
       else    #authorization.username = auth.info.nickname
         authorization.user_id = user.id
       end 
     end 
-    authorization.token = auth.credentials.token
-    authorization.secret = auth.credentials.secret
-    authorization.save
-    authorization.user
+    if !current_user || (authorization.user ==current_user)
+       authorization.token = auth.credentials.token
+       authorization.secret = auth.credentials.secret
+       authorization.save
+       authorization.user
+    else
+     return nil 
+    end   
      
   end
  private

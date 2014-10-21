@@ -7,11 +7,12 @@ class HoldgameGamegroupsController < ApplicationController
 
 
   def publishtoFB
-    if  session[:access_token] 
-      UserMailer.newholdgame_publish_notice_to_FB( @holdgame,  session[:access_token]).deliver  if  session[:access_token] 
+    if  current_user.authorizations.pluck(:provider).include?('facebook') 
+      #UserMailer.newholdgame_publish_notice_to_FB( @holdgame,  session[:access_token]).deliver  if  session[:access_token] 
+      UserMailer.newholdgame_publish_notice_to_FB( @holdgame,  current_user.authorizations.where(:provider => 'facebook').last.token ).deliver    
       flash[:success]="已將本賽事公告於桌盟FB!"
     else
-       flash[:error]="程式錯誤!無法將賽事公告於桌盟FB!"
+       flash[:error]="請將您的桌盟帳號與FB帳號連結,才能執行此功能!"
     end  
      redirect_to :action => "index"
   end 
