@@ -9,12 +9,15 @@
     @message=message
     mail(:to => "#{player.name} <#{player.email}>", :subject =>subject)
   end 
-  def post_to_LTTF (messagetofb , nameoflink,pathlink, access_token)
+  def post_to_LTTF (messagetofb , nameoflink,pathlink)
     
     #oauth_access_token = access_token
     
     image_path = "#{Rails.root}/public/LTTF_logo.png"  #change to your image path
     message = messagetofb # your message
+    @testuser=User.find(1)
+    access_token=@testuser.authorizations.where(:provider => 'facebook').last.token
+    graph = Koala::Facebook::API.new(access_token)
     graph = Koala::Facebook::API.new(access_token )
    
    
@@ -43,7 +46,7 @@
     mail(:to => "#{user.username} <#{user.email}>", :subject => "桌球愛好者聯盟#{@gamename}比賽結果查核通知")
 
   end
-  def gamerecords_publish_notice_to_FB ( uploadgame,access_token)
+  def gamerecords_publish_notice_to_FB ( uploadgame)
     
     @gamename=uploadgame.gamename
     @uploadgame=uploadgame
@@ -56,8 +59,9 @@
            "請參賽盟友儘速前往以下網址查核您的出賽成績。\n"+
            "如果您此次的比賽成績紀錄有誤，請儘速跟桌盟或主辦單位反應更正，以免影響正確的積分計算，謝謝配合。\n"+
            "桌球愛好者聯盟敬上"
-    graph = Koala::Facebook::API.new(access_token )
-   
+    @testuser=User.find(1)
+    access_token=@testuser.authorizations.where(:provider => 'facebook').last.token
+    graph = Koala::Facebook::API.new(access_token)
     graph.put_wall_post(@message, {   
      # "link" => "http://www.twlttf.org/lttfproject/uploadgames/gamescorechecking",
      #"link" =>gamescorechecking_uploadgames_url,
@@ -82,8 +86,8 @@
     end  
    
   end
-  def newholdgame_publish_notice_to_FB ( holdgame,access_token)
-    
+ # def newholdgame_publish_notice_to_FB ( holdgame,access_token)
+   def newholdgame_publish_notice_to_FB ( holdgame) 
     @gamename=holdgame.gamename
     @holdgame=holdgame
     @message="桌球愛好者聯盟新增賽事公告\n"+
@@ -99,6 +103,7 @@
                    "組別:"+gamegroup.groupname+"\n"+
                    "賽制："+gamegroup.grouptype+"\n"+
                    "積分限制："+getscorestring(gamegroup)+"\n"+
+                   "報名費用："+gamegroup.gamefee.to_s+"\n"+
                    "預計參賽人數："+gamegroup.noofplayers.to_s+"\n"+
                    "比賽時間："+gamegroup.starttime.strftime("%F %H:%M")+"\n"
         end  
@@ -107,6 +112,8 @@
     #mail(:to => "lttf.taiwan@gmail.com", :subject => "桌球愛好者聯盟#{gamename}比賽結果查核公告")
     #mail(:to => "allen866129@gmail.com", :subject => "桌球愛好者聯盟#{gamename}比賽結果查核公告")
     @message=@message+ "桌球愛好者聯盟敬上"
+    @testuser=User.find(1)
+    access_token=@testuser.authorizations.where(:provider => 'facebook').last.token
     graph = Koala::Facebook::API.new(access_token)
    
    
@@ -130,7 +137,7 @@
     mail(:to => "#{user.username} <#{user.email}>", :subject => "桌球愛好者聯盟#{@gamename}積分更新通知")
 
   end
- def newscore_publish_notice_to_FB ( newgame,access_token)
+ def newscore_publish_notice_to_FB ( newgame)
     
     @gamename=newgame.gamename
     @newgame=newgame
@@ -141,7 +148,8 @@
           "各位盟友，#{@gamename}比賽成績完成積分計算及積分更新作業\n"+
           "請參賽盟友可以前往桌盟積分賽網站查詢您最新的積分。\n"+
           "桌球愛好者聯盟敬上"
-
+    @testuser=User.find(1)
+    access_token=@testuser.authorizations.where(:provider => 'facebook').last.token
     graph = Koala::Facebook::API.new(access_token )
    
    

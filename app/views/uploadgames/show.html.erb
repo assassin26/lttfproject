@@ -38,7 +38,7 @@
         <td colspan=10>
           <div class="text-center">
             <%if current_user && !@uploadgame.publishedforchecking %>
-              <%= button_to '公告查核', {:controller => "uploadgames", :action => "publishuploadgame", :game_id => @uploadgame.id }, data: { confirm: 'Are you sure?' },:disabled =>  !((current_user.has_role? :admin) ||(current_user.has_role? :superuser) ) || !session[:access_token]  %>
+              <%= button_to '公告查核', {:controller => "uploadgames", :action => "publishuploadgame", :game_id => @uploadgame.id }, data: { confirm: 'Are you sure?' },:disabled =>  !((current_user.has_role? :admin) ||(current_user.has_role? :superuser) )  %>
                      
             <%end%> 
           </div>

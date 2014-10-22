@@ -14,9 +14,6 @@ end
 def update
   super
 end
-def cancelFBconnect
-end	
-def resetFBconnect
-end	
+
 
 end

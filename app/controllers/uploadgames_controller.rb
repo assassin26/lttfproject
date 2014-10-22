@@ -58,7 +58,7 @@ class UploadgamesController < ApplicationController
 
       @uploadgame.save! 
     end  
-    flash[:alert] = "檔案上傳成功"
+    flash[:success] = "檔案上傳成功"
     @uploadgames =  Uploadgame.waitingforprocess.page(params[:page]).per(10)
     redirect_to :action => "index"
   end 
@@ -172,7 +172,7 @@ class UploadgamesController < ApplicationController
      
     end  
      
-     UserMailer.gamerecords_publish_notice_to_FB( uploadgame,   current_user.authorizations.where(:provider => 'facebook').last.token).deliver  if current_user.authorizations.pluck(:provider).include?('facebook')
+     UserMailer.gamerecords_publish_notice_to_FB( uploadgame).deliver 
   end
   def publishuploadgame
 
@@ -184,6 +184,7 @@ class UploadgamesController < ApplicationController
    
 
     @uploadgames = Uploadgame.waitingforprocess.page(params[:page]).per(10)
+    flash[:success]="本賽事公告作業完成!"
     redirect_to :action => "index"
     
   end
@@ -276,7 +277,7 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
     end
      @newgame.players_result=curlines  
      @newgame.save
-     UserMailer.newscore_publish_notice_to_FB( @newgame, current_user.authorizations.where(:provider => 'facebook').last.token).deliver  if current_user.authorizations.pluck(:provider).include?('facebook')
+     UserMailer.newscore_publish_notice_to_FB( @newgame).deliver  
   end  
  
   def trycalculation
@@ -298,12 +299,13 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
     @adjustplayers=Uploadgame.hash_calculate_score(@adjustplayers, @gamesrecords)
     #@zeroscoreplayers= @adjustplayers.find_all{|v| v["bgamescore"].to_i==0 ||v["bgamescore"]=="" }
     @zeroscoreplayers= @adjustplayers.find_all{|v| (v["bgamescore"].to_i==0 ||v["bgamescore"]=="") && (v["adjustscore"]==nil ||v["adjustscore"]=="") && !(v["wongames"]==0 && v["losegames"]==0)}
-    flash[:alert]=""
+    flash[:notice]="積分試算完成!"
     flash[:alert]="尚有0積分球友，需賦予調整積分才可進行積分更新作業!"  if  @zeroscoreplayers!=[]
     Rails.cache.write("adjustplayers",@adjustplayers)
     Rails.cache.write("curgame", @uploadgame)
     Rails.cache.write("playersummery",@playerssummery)
    if params[:save_option_a]
+
        render :calculategamepage 
        
     end
