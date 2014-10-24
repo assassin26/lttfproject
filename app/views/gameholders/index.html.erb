@@ -1,4 +1,10 @@
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+ <% if (!(@currentUser_inGameHolder) && (current_user)) %>
+   <%= button_to '申請主辦比賽', new_gameholder_path , method:  :get,  :disabled => (@currentUser_inGameHolder)  || !(current_user), :form_class=> "btn btn-primary"  %>
+ <%end%>
+ <% if (current_user.has_role? :admin) ||(current_user.has_role? :superuser)  %>
+   <%= button_to '審核新申請資料', approveprocess_gameholders_path , method:  :get,  :disabled => !((current_user.has_role? :admin) || (current_user.has_role? :superuser)), :form_class=> "btn btn-primary"  %>
+ <% end %>
 <div class="table-responsive datagrid">
   <table class="datatable  table-striped table-condensed" border=1 link=blue>
     <caption class="text-center" ><strong>比賽主辦者資料表</strong></caption> 
@@ -46,9 +52,4 @@
 </div>
 
 
- <% if (!(@currentUser_inGameHolder) && (current_user)) %>
-   <%= button_to '申請主辦比賽', new_gameholder_path , method:  :get,  :disabled => (@currentUser_inGameHolder)  || !(current_user), :form_class=> "btn btn-primary"  %>
- <%end%>
- <% if (current_user.has_role? :admin) ||(current_user.has_role? :superuser)  %>
-   <%= button_to '審核新申請資料', approveprocess_gameholders_path , method:  :get,  :disabled => !((current_user.has_role? :admin) || (current_user.has_role? :superuser)), :form_class=> "btn btn-primary"  %>
- <% end %>
+ 

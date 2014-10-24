@@ -1,19 +1,12 @@
 
+
 <div class="row">
-   <div class="col-xs-8 col-md-8 col-lg-8">
-    <div style="margin-top:20px">
-     <h2><font color="blue">桌球愛好者聯盟比賽登錄及報名系統</font></h2>
-    </div>
-  </div>
-  <div class="col-md-4">
-    <div style="margin-top:10px">
-    </div>
-  </div>
-</div>
-<div class="row">
+  <%= link_to_if(current_user && ((current_user.has_role? :admin) || (current_user.has_role? :superuser) || (current_user.has_role? :gameholder)), '登錄新比賽', new_holdgame_path, :class=> "button radius") %>
+
   <div class="col-xs-12 col-md-12 col-lg-12">
     <div class="table-responsive datagrid">
       <table class="datatable  table-striped table-condensed" border=1 link=blue>
+        <caption class="text-center" ><strong>桌球愛好者聯盟比賽登錄及報名系統</strong></caption>
         <thead>
           <tr>
             <th>賽事名稱</th>
@@ -78,4 +71,3 @@
 
 
 
-<%= link_to_if(current_user && ((current_user.has_role? :admin) || (current_user.has_role? :superuser) || (current_user.has_role? :gameholder)), '登錄新比賽', new_holdgame_path, :class=> "button radius") %>

@@ -36,6 +36,11 @@
       <%= link_to( new_user_session_path )  do %>
         <i class="fa fa-child"></i>&nbsp;登入系統
       <% end %>
+
     </li>
+    <li>
+    <p>  <%= link_to(image_tag("/images/facebook.ico"),user_omniauth_authorize_path('facebook'))  %> </p>
+           
+    </li>  
   <% end %>
 </ul>
