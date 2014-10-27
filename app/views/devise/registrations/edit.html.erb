@@ -61,14 +61,10 @@
                 <%= f.password_field :password_confirmation,  :class =>"form-control", :size => "50",:placeholder =>"若不變更請勿填寫" %>
               </div>
             </div>
-            <div class="col-xs-12 col-md-12 col-lg-12"></br></div>
-            <%= f.fields_for :playerprofile do |profile_form| %>
-              <div class="form-group">
-                <div class="col-xs-12 col-md-12 col-lg-12">
-                  <%= profile_form.label "初始積分", :class => "form-label" %>:
-                  <%= profile_form.number_field :initscore, :class =>"form-control", :size => "50" %>
-                </div>
-              </div>
+           
+              <div class="col-xs-12 col-md-12 col-lg-12"></br></div>
+              <%= f.fields_for :playerprofile do |profile_form| %>
+              
               <div class="col-xs-12 col-md-12 col-lg-12"></br></div>
               <div class="form-group">
                 <div class="col-xs-12 col-md-12 col-lg-12">
