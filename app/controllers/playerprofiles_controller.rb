@@ -2,9 +2,11 @@
 class PlayerprofilesController < ApplicationController
   before_filter :authenticate_user!  ,:find_user, :except=>[:show,:create,:index, :import, :search]
   helper_method :sort_column, :sort_direction
+  layout :resolve_layout
   # GET /playerprofiles
   # GET /playerprofiles.json
-
+  def lttfindex
+  end
   def index
        
    #@playerprofiles = Playerprofile.all
@@ -196,6 +198,15 @@ class PlayerprofilesController < ApplicationController
 
     def find_user
     @event = User.find( current_user.id )
+  end
+  def resolve_layout
+    case action_name
+    
+    when "lttfindex" 
+      "lttfhome"
+    else
+      "application"
+    end
   end
   private
   

@@ -2,7 +2,7 @@
 module HoldgamesHelper
 def default_meta_tags
   {
-    :site => '桌球愛好者聯盟積分系統',
+    :site => '桌球愛好者聯盟',
     :title       =>'桌球愛好者聯盟積分系統',
     :description => '桌球愛好者聯盟積分賽系統',
     :og =>

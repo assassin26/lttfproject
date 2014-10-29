@@ -1,3 +1,5 @@
+<% set_meta_tags :og => { :title => @holdgame.startdate.to_s+@holdgame.gamename+'報名網頁' , :image => 'http://twlttf.org/LTTF_logo.png', :description =>'歡迎球友前往此報名網頁報名參賽', :url=>holdgame_gamegroups_url(@holdgame)} %>
+<link rel="canonical" href= <%=holdgame_gamegroups_url(@holdgame)%> />    
 <div class="col-md-12">
   <h1 align=center> <%= @holdgame.startdate %> <%= @holdgame.gamename %></h1>
 <div class="col-md-6">

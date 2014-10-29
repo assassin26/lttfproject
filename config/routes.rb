@@ -3,6 +3,8 @@ Lttfproject::Application.routes.draw do
   
 
 
+  #get "home/index"
+
  resources :holdgames do
       resources :gamegroups, :controller => 'holdgame_gamegroups' do
         collection do
@@ -55,6 +57,7 @@ devise_for :users, :controllers => {:registrations => 'users/registrations',:omn
   devise_scope :user do
       resources :users 
   end
+  root :to => "home#index"
   resources :playerprofiles do
      collection do
        post :import 
@@ -63,7 +66,7 @@ devise_for :users, :controllers => {:registrations => 'users/registrations',:omn
        get :callback   
      end   
   end
-  root :to => "playerprofiles#index"
+  
   resources :ttcourts 
   resources :gameholders do
      collection do
