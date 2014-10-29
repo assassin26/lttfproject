@@ -1,9 +1,11 @@
 <ul class="nav navbar-nav navbar-right">
+  
   <% if current_user %>
     <li class="dropdown">
       <%= link_to "/account" , :class => "dropdown-toggle", :data => { :toggle => "dropdown" } do %>
       會員: <%= current_user.username %>
       <% end %>
+
       <% if !current_user.authorizations.pluck(:provider).include?('facebook') %>
         <%= render_list :class => "dropdown-menu" do |li|
 
@@ -14,6 +16,7 @@
           li << link_to("登出",destroy_user_session_path, :method => :delete ) 
         end%>
       <%else%>
+      
         <%= render_list :class => "dropdown-menu" do |li|
 
           li << link_to("修改個人資料",edit_registration_path(current_user))
@@ -22,10 +25,11 @@
 
           li << link_to("登出",destroy_user_session_path, :method => :delete)
         end%>
-
+     
       <%end%> 
       
     </li>
+  
   <% else %>
     <li>
       <%= link_to( new_user_registration_path) do %>
