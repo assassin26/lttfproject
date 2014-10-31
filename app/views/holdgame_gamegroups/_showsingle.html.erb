@@ -101,8 +101,8 @@
 
   <!div class="table-responsive datagrid" >
     <!table class="datatable " border=1 link=blue width="100%">
-     <!div class="table-responsive">
-      <table class="datatable table-bordered table-striped table-condensed" border=1 link=blue >  
+     <div class="table-responsive datagrid">
+      <table class="datatable" border=1 link=blue >  
       <caption class="text-center" ><strong>已報名清單</strong></caption> 
 
         <thead >
@@ -163,8 +163,9 @@
   
       </tfoot>  
     </table>  
- 
+
+</div>
   <%= link_to '返回前頁', :back %>
   <%= link_to '桌盟比賽地圖', lttfgamesindex_gamesmaps_path %>
 
-  <!/div>
+  
