@@ -90,8 +90,11 @@
    def newholdgame_publish_notice_to_FB ( holdgame) 
     @gamename=holdgame.gamename
     @holdgame=holdgame
+    @tempdategame=holdgame.startdate.to_s+holdgame.gamename
+    @gameholdername=Gameholder.find(holdgame.gameholder_id).name
     @message="桌球愛好者聯盟新增賽事公告\n"+
-          "各位盟友，#{@gamename}已開始接受報名\n"+
+          "各位盟友，#{@tempdategame}已開始接受報名。\n"+
+          "此項賽事主辦人:#{@gameholdername}\n"+
            "請符合參賽資格且欲參賽之盟友儘速前往以下網址報名。\n"+
            "此項比賽分組如下\n"
           

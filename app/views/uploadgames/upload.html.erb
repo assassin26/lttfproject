@@ -1,4 +1,4 @@
-
+<% set_meta_tags :title => '比賽紀錄上傳系統'%>
   <% if !@uploadgame %>
     <%= form_tag displayuploadfile_uploadgames_path, :method => :get do %>
       <%= text_field_tag "gamefileurl" %>

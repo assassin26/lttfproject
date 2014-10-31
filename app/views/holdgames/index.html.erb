@@ -1,4 +1,4 @@
-
+<% set_meta_tags :title => '比賽登錄及管理系統'%>
 
 <div class="row">
   <%= link_to_if(current_user && ((current_user.has_role? :admin) || (current_user.has_role? :superuser) || (current_user.has_role? :gameholder)), '登錄新比賽', new_holdgame_path, :class=> "button radius") %>
