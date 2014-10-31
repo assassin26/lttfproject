@@ -1,94 +1,94 @@
+# encoding: utf-8
+<br>
 
-
-<div class="col-xs-12 col-md-12 col-lg-12">
-<div class="table-responsive datagrid">
-  <table class="table-condensed" border=1 >
-    <tbody>
-      <tr>
-        <td><font color="black">分組名稱:</font></td>
-        <td><font color="black">比賽賽制:</font></td>
-        <td><font color="black">報名方式:</font></td>
-        <td ><font color="black">開賽時間:</font></td>
-      </tr>
+  <div class="table-responsive datagrid">
+    <table class="table-condensed" border=1 >
+      <tbody>
+        <tr>
+          <td><font color="black">分組名稱:</font></td>
+          <td><font color="black">比賽賽制:</font></td>
+          <td><font color="black">報名方式:</font></td>
+          <td ><font color="black">開賽時間:</font></td>
+        </tr>
     
-      <tr>
-        <td><strong><%=gamegroup.groupname %></strong></td>
-        <td><strong><%=gamegroup.grouptype %></strong></td>
-        <td><strong><%=Gamegroup.regtypes[gamegroup.regtype] %></strong></td>
-        <td ><strong><%= gamegroup.starttime.strftime("%F %H:%M")  %></strong></td>
-      </tr>
+        <tr>
+          <td><strong><%=gamegroup.groupname %></strong></td>
+          <td><strong><%=gamegroup.grouptype %></strong></td>
+          <td><strong><%=Gamegroup.regtypes[gamegroup.regtype] %></strong></td>
+          <td ><strong><%= gamegroup.starttime.strftime("%F %H:%M")  %></strong></td>
+        </tr>
 
-      <% if gamegroup.scorelimitation == '無積分限制' %> 
-        <tr> 
-          <td ><font color="black">報名費用:</font></td>
-          <td ><font color="black">積分限制:</font></td>
-          <td><font color="black">預計參賽隊數:</font></td> 
-          <td><font color="black">已報名隊數:</font></td> 
-        </tr>
-        <tr> 
-          <td><strong><%=gamegroup.gamefee %></strong></td>    
-          <td><strong><%=gamegroup.scorelimitation %></strong></td> 
-          <td><strong><%=gamegroup.noofplayers %></strong></td>
-          <td><strong><%=gamegroup.totalresgisteredsplayersno %></strong></td>
-        </tr>
-      <% end %>
-      <% if gamegroup.scorelimitation == '限制高低分' %> 
-        <tr>
-          <td ><font color="black">報名費用:</font></td>
-          <td><font color="black">積分限制:</font></td>
-          <td><font color="black">預計參賽隊數:</font></td> 
-          <td><font color="black">已報名隊數:</font></td> 
-        </tr>
-        <tr>
-          <td><strong><%=gamegroup.gamefee %></strong></td>    
-          <td><strong><%=gamegroup.scorelow%>~~<%=gamegroup.scorehigh%></strong></td> 
-          <td><strong><%=gamegroup.noofplayers %></strong></td>
-          <td><strong><%=gamegroup.totalresgisteredsplayersno %></strong></td>
-        </tr>
+        <% if gamegroup.scorelimitation == '無積分限制' %> 
+          <tr> 
+            <td ><font color="black">報名費用:</font></td>
+            <td ><font color="black">積分限制:</font></td>
+            <td><font color="black">預計參賽隊數:</font></td> 
+            <td><font color="black">已報名隊數:</font></td> 
+          </tr>
+          <tr> 
+            <td><strong><%=gamegroup.gamefee %></strong></td>    
+            <td><strong><%=gamegroup.scorelimitation %></strong></td> 
+            <td><strong><%=gamegroup.noofplayers %></strong></td>
+            <td><strong><%=gamegroup.totalresgisteredsplayersno %></strong></td>
+          </tr>
         <% end %>
-      <% if gamegroup.scorelimitation == '限制最高分' %> 
-        <tr> 
-          <td><font color="black">報名費用:</font></td>
-          <td><font color="black">積分限制:</font></td>
-          <td><font color="black">預計參賽隊數:</font></td> 
-          <td><font color="black">已報名隊數:</font></td>  
-        </tr>
-        <tr>
-          <td><strong><%=gamegroup.gamefee %></strong></td>    
-          <td><strong>小於<%=gamegroup.scorehigh%></strong></td> 
-          <td><strong><%=gamegroup.noofplayers %></strong></td>
-          <td><strong><%=gamegroup.totalresgisteredsplayersno %></strong></td>
-        </tr>
-      <% end %>
-      <% if gamegroup.scorelimitation == '限制最低分' %>
-        <tr>  
-          <td ><font color="black">報名費用:</font></td>
-          <td><font color="black">積分限制:</font></td>
-          <td><font color="black">預計參賽/備取人數:</font></td> 
-          <td><font color="black">已報名人數(正選/備取):</font></td> 
-        </tr>
-        <tr>
-          <td><strong><%=gamegroup.gamefee %></strong></td>    
-          <td><strong>大於<%=gamegroup.scorelow%></strong></td> 
-          <td><strong><%=gamegroup.noofplayers %></strong></td>
-          <td><strong><%=gamegroup.totalresgisteredsplayersno %></strong></td>
-        </tr>
+        <% if gamegroup.scorelimitation == '限制高低分' %> 
+          <tr>
+            <td ><font color="black">報名費用:</font></td>
+            <td><font color="black">積分限制:</font></td>
+            <td><font color="black">預計參賽隊數:</font></td> 
+            <td><font color="black">已報名隊數:</font></td> 
+          </tr>
+          <tr>
+            <td><strong><%=gamegroup.gamefee %></strong></td>    
+            <td><strong><%=gamegroup.scorelow%>~~<%=gamegroup.scorehigh%></strong></td> 
+            <td><strong><%=gamegroup.noofplayers %></strong></td>
+            <td><strong><%=gamegroup.totalresgisteredsplayersno %></strong></td>
+          </tr>
+        <% end %>
+        <% if gamegroup.scorelimitation == '限制最高分' %> 
+          <tr> 
+            <td><font color="black">報名費用:</font></td>
+            <td><font color="black">積分限制:</font></td>
+            <td><font color="black">預計參賽隊數:</font></td> 
+            <td><font color="black">已報名隊數:</font></td>  
+          </tr>
+          <tr>
+            <td><strong><%=gamegroup.gamefee %></strong></td>    
+            <td><strong>小於<%=gamegroup.scorehigh%></strong></td> 
+            <td><strong><%=gamegroup.noofplayers %></strong></td>
+            <td><strong><%=gamegroup.totalresgisteredsplayersno %></strong></td>
+          </tr>
+        <% end %>
+        <% if gamegroup.scorelimitation == '限制最低分' %>
+          <tr>  
+            <td ><font color="black">報名費用:</font></td>
+            <td><font color="black">積分限制:</font></td>
+            <td><font color="black">預計參賽/備取人數:</font></td> 
+            <td><font color="black">已報名人數(正選/備取):</font></td> 
+          </tr>
+          <tr>
+            <td><strong><%=gamegroup.gamefee %></strong></td>    
+            <td><strong>大於<%=gamegroup.scorelow%></strong></td> 
+            <td><strong><%=gamegroup.noofplayers %></strong></td>
+            <td><strong><%=gamegroup.totalresgisteredsplayersno %></strong></td>
+          </tr>
         <% end %>        
-      </tbody> 
+      </tbody>   
     
       
-</table>
+    </table>
 
 
-</div>
+  </div>
 
 
 
 
 <!-- Button (Double) -->
 
-
-<table width="100">
+<br>
+<table style='width:100%'>
 <tr>
   <% if current_user && (@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser) )  %>
      <td><%= button_to '修改分組資料', edit_holdgame_gamegroup_path(@holdgame, gamegroup), :method=>:get %></td>
@@ -105,21 +105,20 @@
 
 
 
-</div>
+
 
 <br>
-
-<div class="table-responsive datagrid">
-    <table class="datatable " border=1 link=blue>
+<!div class="table-responsive datagrid"  width="100%">
+  <table class="datatable table-bordered table-striped table-condensed" border=1 link=blue > 
       <caption class="text-center" ><strong>已報名清單</strong></caption> 
 
         <thead>
          
         <tr>
-        <th>序號</th>         
-        <th>會員編號</th>
-        <th>會員姓名</th>
-        <th>目前積分</th>
+        <th style="text-align:center" >序號</th>         
+        <th style="text-align:center" >會員編號</th>
+        <th style="text-align:center" >會員姓名</th>
+        <th style="text-align:center" >目前積分</th>
          </tr>
         </thead>  
         <tbody>
@@ -127,12 +126,12 @@
          
               <%  attendeearray.each_with_index do |row_group,groupindex| %> 
                 <tr>
-                <td colspan=4 > <%= row_group[0].teamname %></td>
+                <td  style="text-align:center" colspan=4 ><font color='blue'><strong> <%= row_group[0].teamname %></font></strong></td>
                 </tr>
                 <% if row_group[0].registor_id==current_user.id ||@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser)   %>
                
                 <tr>
-                <td colspan=4 >
+                <td  style="text-align:center" colspan=4 >
                 <%= button_to '取消報名', cancel_player_registration_holdgame_gamegroups_path(@holdgame, gamegroup, :user_in_groupattendant=>gamegroup.find_player_in_attendants(row_group[0].player_id)) ,  {:onclick => "return confirm('確定取消報名?')", :method => :post}  %>
                    
                 </td>  
@@ -142,15 +141,15 @@
                 <% player_index=1 %>
               
                 <%for player in row_group%>
-                <td> <%=  player_index %></td>         
-                <td> <%=  player.player_id  %></td>
-                <td>
+                <td style="text-align:center"><font color='blue'><strong> <%=  player_index %></font></strong></td>         
+                <td style="text-align:center"><font color='blue'><strong> <%=  player.player_id  %></font></strong></td>
+                <td  style="text-align:center">
                   <%= link_to(playerprofile_path(player.player_id)) do %>
                     <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"><%=  player.name %></font><br> 
                     <font color="red">( <%= @player_current_score[player.player_id]%>) </font>
                   <% end %>
                 </td>
-                <td> <%=  player.curscore %></td>
+                <td  style="text-align:center"><font color='blue'><strong> <%=  player.curscore %></font></strong></td>
                 <% player_index+=1 %>
                 </tr>  
                 <%end%>
@@ -167,7 +166,8 @@
   
       </tfoot>  
     </table>  
-  </div>
+
 
   <%= link_to '返回前頁', holdgames_path %>
   <%= link_to '桌盟比賽地圖', lttfgamesindex_gamesmaps_path %>
+ 

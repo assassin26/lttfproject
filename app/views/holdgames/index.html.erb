@@ -3,7 +3,8 @@
 <div class="row">
   <%= link_to_if(current_user && ((current_user.has_role? :admin) || (current_user.has_role? :superuser) || (current_user.has_role? :gameholder)), '登錄新比賽', new_holdgame_path, :class=> "button radius") %>
 
-  <div class="col-xs-12 col-md-12 col-lg-12">
+  <div class="col-md-4 col-sm-6 col-md-12 col-lg-12">
+
     <div class="table-responsive datagrid">
       <table class="datatable  table-striped table-condensed" border=1 link=blue>
         <caption class="text-center" ><strong>桌球愛好者聯盟比賽登錄及報名系統</strong></caption>

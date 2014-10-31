@@ -4,7 +4,7 @@ class Gameholder < ActiveRecord::Base
   scope :waitingforapprove, where( :approved => false )
   scope :alreadyapproved, where( :approved => true )
   belongs_to :user
-  has_many :holdgames
+  has_many :holdgames, dependent: :destroy
   after_commit :assign_zipcode
   def assign_zipcode
   	self.zipcode=TWZipCode_hash[self.city][self.county]

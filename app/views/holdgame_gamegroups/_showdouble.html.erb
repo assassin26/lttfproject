@@ -1,8 +1,9 @@
+# encoding: utf-8
+<br>
 
-
-<div class="col-xs-12 col-md-12 col-lg-12">
 <div class="table-responsive datagrid">
-  <table class="table-condensed" border=1 >
+ 
+    <table class="table-bordered table-striped table-condensed cf" border=1 link=blue >  
     <tbody>
       <tr>
         <td><font color="black">分組名稱:</font></td>
@@ -84,8 +85,8 @@
 
 <!-- Button (Double) -->
 
-
-<table width="100">
+<br>
+<table  style='width:100%'>
 <tr>
   <% if current_user && (@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser) )  %>
      <td><%= button_to '修改分組資料', edit_holdgame_gamegroup_path(@holdgame, gamegroup), :method=>:get %></td>
@@ -102,27 +103,25 @@
 </table>
 
 
-
-</div>
-
 <br>
 
-<div class="table-responsive datagrid">
-    <table class="datatable " border=1 link=blue>
+  <!div class="table-responsive datagrid"  width="100%">
+    <!table class="datatable " border=1 link=blue>
+    <table class="datatable table-bordered table-striped table-condensed " border=1 link=blue >  
       <caption class="text-center" ><strong>已報名清單</strong></caption> 
 
         <thead>
          
         <tr>
-        <th>序號</th>         
-        <th>會員編號</th>
-        <th>會員姓名</th>
-        <th>目前積分</th>
-        <th>會員編號</th>
-        <th>會員姓名</th>
-        <th>目前積分</th>
-        <th>備註</th>
-        <th></th>
+        <th style="text-align:center" >序號</th>         
+        <th style="text-align:center" >會員編號</th>
+        <th style="text-align:center" >會員姓名</th>
+        <th style="text-align:center" >目前積分</th>
+        <th style="text-align:center" >會員編號</th>
+        <th style="text-align:center" >會員姓名</th>
+        <th style="text-align:center" >目前積分</th>
+        <th style="text-align:center" >備註</th>
+        <th style="text-align:center" ></th>
         </tr>
         </thead>  
         <tbody>
@@ -130,24 +129,24 @@
           <tr>
               <%  attendeearray.each_with_index do |row_group,groupindex| %> 
               
-               <td > <%= groupindex+1 %></td>
+               <td style="text-align:center"><font color='blue'><strong> <%= groupindex+1 %></strong></font></td>
               
                 <%for player in row_group%>
                          
-                <td> <%=  player.player_id  %></td>
-                <td>
+                <td style="text-align:center"><font color='blue'><strong> <%=  player.player_id  %></strong></font></td>
+                <td style="text-align:center">
                   <%= link_to(playerprofile_path(player.player_id)) do %>
                     <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"><%=  player.name %></font>
                   <% end %>
                 </td>
-                <td> <%= @player_current_score[player.player_id] %></td>
+                <td style="text-align:center"> <font color='blue'><strong><%= @player_current_score[player.player_id] %></strong></font></td>
                 <%end%>
                 <%if groupindex+1>gamegroup.noofplayers%>
-                  <td><font color='red'>候補</font></td>
+                  <td style="text-align:center"><font color='red'><strong>候補</font></strong></td>
                 <%else%>
-                  <td>正選</td>
+                  <td style="text-align:center"><font color='blue'><strong>正選</strong></font></td>
                 <%end%>                          
-                <td>
+                <td style="text-align:center">
                     <% if current_user && (player.player_id==current_user.id ||  player.registor_id==current_user.id ||@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser) )  %>
                       <%= button_to '取消報名', cancel_current_user_registration_holdgame_gamegroups_path(@holdgame, gamegroup, :user_in_groupattendant=>gamegroup.find_player_in_attendants(player.player_id)) ,  {:onclick => "return confirm('確定取消報名?')", :method => :post}  %>
                     <%end%>
@@ -164,7 +163,8 @@
   
       </tfoot>  
     </table>  
-  </div>
+
 
   <%= link_to '返回前頁', holdgames_path %>
   <%= link_to '桌盟比賽地圖', lttfgamesindex_gamesmaps_path %>
+
