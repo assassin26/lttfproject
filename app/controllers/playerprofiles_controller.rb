@@ -1,6 +1,6 @@
 # encoding: UTF-8”
 class PlayerprofilesController < ApplicationController
-  before_filter :authenticate_user!  ,:find_user, :except=>[:show,:create,:index, :import, :search]
+  before_filter :authenticate_user!  ,:find_user, :except=>[:show,:create,:index, :import, :lttfindex, :search]
   helper_method :sort_column, :sort_direction
   layout :resolve_layout
   # GET /playerprofiles
@@ -198,7 +198,7 @@ class PlayerprofilesController < ApplicationController
 
     def find_user
     @event = User.find( current_user.id )
-  end
+    end
   def resolve_layout
     case action_name
     

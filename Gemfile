@@ -74,3 +74,4 @@ gem 'gon'
 gem 'omniauth'
 gem 'omniauth-oauth2'
 gem 'omniauth-facebook'
+gem "rails_autolink", "~> 1.0.9"

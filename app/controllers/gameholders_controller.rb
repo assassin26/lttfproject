@@ -1,8 +1,8 @@
 # encoding: UTF-8”
 class GameholdersController < InheritedResources::Base
 	layout :resolve_layout
-	before_filter :authenticate_user! 
-  before_filter :find_user
+	before_filter :authenticate_user! , :except=>[:demos]
+  before_filter :find_user, :except=>[:demos]
 	def index
     #@playerprofiles = Playerprofile.all
     if (current_user) && ((current_user.has_role? :admin)||(current_user.has_role? :superuser))
@@ -23,6 +23,8 @@ class GameholdersController < InheritedResources::Base
    @gameholder.user.add_role(:gameholder)
    @gameholders = Gameholder.waitingforapprove.includes(:user).page(params[:page]).per(50) 
    render :action => :approveprocess 
+  end  
+  def demos
   end  
   def approveprocess
     @gameholders = Gameholder.waitingforapprove.includes(:user).page(params[:page]).per(50) 

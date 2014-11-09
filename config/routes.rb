@@ -3,8 +3,7 @@ Lttfproject::Application.routes.draw do
   
 
 
-  #get "home/index"
-
+ match '/home' => 'home#index'
  resources :holdgames do
       resources :gamegroups, :controller => 'holdgame_gamegroups' do
         collection do
@@ -64,6 +63,7 @@ devise_for :users, :controllers => {:registrations => 'users/registrations',:omn
        get :search
        get :googleplayerlist   
        get :callback   
+       get :lttfindex  
      end   
   end
   
@@ -72,6 +72,7 @@ devise_for :users, :controllers => {:registrations => 'users/registrations',:omn
      collection do
        get :approveprocess 
        post :approve
+       get :demos
      end 
   end 
   resources :gamesmaps do

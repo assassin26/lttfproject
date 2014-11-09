@@ -1,6 +1,6 @@
 # encoding: UTF-8”
 module TtcourtsHelper
-def default_meta_tags
+def default_ttourts_meta_tags
   {
   	:site => '桌球愛好者聯盟',
     :title       => '台灣打桌球地圖',
