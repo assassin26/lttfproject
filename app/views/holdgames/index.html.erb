@@ -15,9 +15,7 @@
             <th>比賽地點</th>
             <th>主辦人員</th>
             <th>詳細比賽資訊</th>
-            <th></th>
-            <th></th>
-            <th></th>
+            <th>功能操作</th>
           </tr>
         </thead>
         <tbody>
@@ -40,15 +38,15 @@
                
               
 
-
-            <td><%= link_to_if( current_user &&((current_user.has_role? :admin) || (current_user.has_role? :superuser)  || (current_user.id==holdgame.gameholder.user_id)), '修改資料',  edit_holdgame_path(holdgame),:class=> "button radius" )%>
-            </td>
-
-
-
-            <td><%= link_to_if( current_user&& ((current_user.has_role? :admin) || (current_user.has_role? :superuser)  || (current_user.id==  holdgame.gameholder.user_id)), '刪除比賽', holdgame, method: :delete, data: { confirm: '確定要刪除本場比賽資料?'},:class=> "button radius"  ) %></td>
-
             <td><%= link_to '分組及報名', holdgame_gamegroups_path(holdgame),:class=> "button radius" %>
+            <%= link_to_if( current_user &&((current_user.has_role? :admin) || (current_user.has_role? :superuser)  || (current_user.id==holdgame.gameholder.user_id)), '修改資料',  edit_holdgame_path(holdgame),:class=> "button radius" )%>
+            
+
+
+
+            <%= link_to_if( current_user&& ((current_user.has_role? :admin) || (current_user.has_role? :superuser)  || (current_user.id==  holdgame.gameholder.user_id)), '刪除比賽', holdgame, method: :delete, data: { confirm: '確定要刪除本場比賽資料?'},:class=> "button radius"  ) %></td>
+
+           
             </td>
 
             </tr>
