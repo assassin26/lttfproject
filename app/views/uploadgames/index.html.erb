@@ -35,8 +35,7 @@
                    <i class="fa fa-hand-o-up"></i>&nbsp;<font color=blue><%= uploadgame.gamename %></font>
                  <% end %>     
              </td>
-
-            <td align=center><font color=blue><%= uploadgame.gamedate %></font></td>
+            <td align=center><font color=blue><%= uploadgame.gamedate.strftime("%F")%></font></td>
             <td align=center><font color=blue><%= uploadgame.recorder %></font></td>
             <td align=center><font color=blue><%= uploadgame.uploader %></font></td>
   
