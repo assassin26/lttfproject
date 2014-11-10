@@ -419,6 +419,8 @@ end
 def edit
 
   @gamegroup = @holdgame.gamegroups.find( params[:id] )
+  @gamegroup.starttime= @gamegroup.starttime.in_time_zone.strftime("%F %H:%M")
+
 end
 
 def update
