@@ -123,9 +123,10 @@
     graph.put_wall_post(@message, {   
      # "link" => "http://www.twlttf.org/lttfproject/uploadgames/gamescorechecking",
      #"link" =>gamescorechecking_uploadgames_url,
+    
      "link" =>holdgame_gamegroups_url(holdgame),
-      "description" =>holdgame.gamename+"報名網頁" ,
-      "name" =>holdgame.gamename+"報名網頁" ,
+      "description" =>@tempdategame+"報名網頁" ,
+      "name" =>@tempdategame+"報名網頁" ,
       "picture" => "httP://www.twlttf.org/lttfproject/public/LTTF_logo.png"  },
       APP_CONFIG['LTTF_GROUP_ID']
      )
