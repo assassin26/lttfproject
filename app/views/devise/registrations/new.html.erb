@@ -2,7 +2,11 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <%= javascript_include_tag 'jquery.preimage' %>
   <%= javascript_include_tag 'image_upload' %>
+ 
 <% end %>
+<% set_meta_tags :site => '桌球愛好者聯盟',:title=>'桌球愛好者聯盟積分賽系統註冊網頁',:description => '桌球愛好者聯盟積分賽系統',
+    :og => { :title =>'桌球愛好者聯盟積分賽系統註冊網頁'  , :image => 'http://twlttf.org/lttfgroupphoto.jpg', :description =>'歡迎球友註冊桌盟積分賽會員', :url=> 'http://www.twlttf.org'} %>
+ <link rel="canonical" href= 'http://www.twlttf.org' />    
 <p align=center><%= link_to '返回前頁', :back %></p>
 <div class="row">
   <div class="col-xs-12 col-md-12 col-lg-12">

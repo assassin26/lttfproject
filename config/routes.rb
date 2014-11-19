@@ -4,6 +4,7 @@ Lttfproject::Application.routes.draw do
 
 
  match '/home' => 'home#index'
+
  resources :holdgames do
       resources :gamegroups, :controller => 'holdgame_gamegroups' do
         collection do
@@ -50,7 +51,7 @@ Lttfproject::Application.routes.draw do
 
 
 
-devise_for :users, :controllers => {:registrations => 'users/registrations',:omniauth_callbacks => 'users/omniauth_callbacks' }
+devise_for :users, :controllers => {:registrations => 'users/registrations', :omniauth_callbacks => 'users/omniauth_callbacks' }
 #devise_for :users, :controllers => { :registrations => 'users/registrations'}  
 
   devise_scope :user do

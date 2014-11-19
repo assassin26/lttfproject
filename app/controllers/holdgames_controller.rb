@@ -1,6 +1,9 @@
 # encoding: UTF-8”
 
 require 'google_drive'
+require 'google/api_client'
+require 'google/api_client/client_secrets'
+require 'google/api_client/auth/installed_app'
 class HoldgamesController < InheritedResources::Base
 
   before_filter :authenticate_user! , :except=>[:index,:show]
@@ -80,16 +83,54 @@ class HoldgamesController < InheritedResources::Base
     end
   end
  
-  def create_gameinputfile(filename)
-    connection = GoogleDrive.login(APP_CONFIG['Google_Account'], APP_CONFIG['Google_PWD'])
-    folder = connection.collection_by_title(APP_CONFIG['Input_File_Folder'])
-    spreadsheet = connection.spreadsheet_by_url(APP_CONFIG['Inupt_File_Template'])
-    newspreadsheet=spreadsheet.duplicate(filename)
-    folder.add(newspreadsheet)
-    return newspreadsheet.human_url
-  
-  end
+ ##
+# Copy an existing file
+#
+# @param [Google::APIClient] client
+#   Authorized client instance
+# @param [String] origin_file_id
+#   ID of the origin file to copy
+# @param [String] copy_title
+#   Title of the copy
+# @return [Google::APIClient::Schema::Drive::V2::File]
+#   The copied file if successful, nil otherwise
+def copy_file(client, origin_file_id, copy_title)
 
+  drive = client.discovered_api('drive', 'v2')
+  copied_file = drive.files.copy.request_schema.new({
+    'title' => copy_title
+  })
+  result = client.execute(
+    :api_method => drive.files.copy,
+    :body_object => copied_file,
+    :parameters => { 'fileId' => origin_file_id })
+  if result.status == 200
+    return result.data
+  else
+    flash[:error]="An error occurred: #{result.data['error']['message']}"
+  end
+end
+def create_gameinputfile(filename)
+  client = Google::APIClient.new(
+         :application_name => 'lttfprojecttest',
+          :application_version => '1.0.0')
+  fileid=APP_CONFIG['Inupt_File_Template'].to_s.match(/[-\w]{25,}/).to_s
+  keypath = Rails.root.join('config','client.p12').to_s
+  key = Google::APIClient::KeyUtils.load_from_pkcs12( keypath, 'notasecret')
+  client.authorization = Signet::OAuth2::Client.new(
+    :token_credential_uri => 'https://accounts.google.com/o/oauth2/token',
+    :audience => 'https://accounts.google.com/o/oauth2/token',
+    :scope => 'https://www.googleapis.com/auth/drive',
+    :issuer => APP_CONFIG[APP_CONFIG['HOST_TYPE']]['Google_Issuer'].to_s,
+    :access_type => 'offline' ,
+    :approval_prompt=>'force',
+    :signing_key => key)
+  client.authorization.fetch_access_token!
+  fileinfo=copy_file(client, fileid, filename)
+
+  fileinfo.alternateLink
+  
+end
   private
   def find_gameholder
 
