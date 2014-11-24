@@ -74,6 +74,6 @@ gem 'gon'
 gem 'omniauth'
 gem 'omniauth-oauth2'
 gem 'omniauth-facebook'
-#gem 'omniauth-google-oauth2'
+gem 'omniauth-google-oauth2'
 gem "rails_autolink", "~> 1.0.9"
 gem 'google-api-client'
