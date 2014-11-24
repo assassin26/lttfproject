@@ -143,8 +143,8 @@ function codeAddress() {
 
         
   
-        gon.lng=results[0].geometry.location.B;
-        gon.lat=results[0].geometry.location.k;
+        gon.lng=results[0].geometry.location.lng();
+        gon.lat=results[0].geometry.location.lat();
        
         handler.map.centerOn({ lat: gon.lat, lng: gon.lng }); 
         deleteMarkers();
@@ -202,10 +202,11 @@ function testdragend(pos)
   
   var tt_lat = document.getElementById("ttcourt_lat");
   var tt_lng = document.getElementById("ttcourt_lng");
-  tt_lat.value = pos.k;
-  tt_lng.value = pos.B;
+ 
+  tt_lat.value = pos.lat(); //k
+  tt_lng.value = pos.lng();   //B
    handler.getMap().setZoom(16);
-  handler.map.centerOn({ lat: pos.k, lng: pos.B }); 
+  handler.map.centerOn({ lat: pos.lat(), lng: pos.lng()}); 
   reverseGeocode(pos,document.getElementById("tag_0").checked);
 }
 
@@ -213,7 +214,7 @@ handler.map.listen_to_markers = function(markers){
   for(var i = 0; i < markers.length; i++){
     marker = markers[i];
     google.maps.event.addListener(marker.serviceObject, 'dragend', 
-      function() {testdragend(this.getPosition() )})
+      function(event) {testdragend(this.getPosition(),event )})
   }
 };
 

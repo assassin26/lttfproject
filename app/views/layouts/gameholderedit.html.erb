@@ -182,8 +182,8 @@ function codeAddress() {
 
 
 
-        gon.lng=results[0].geometry.location.B;
-        gon.lat=results[0].geometry.location.k;
+        gon.lng=results[0].geometry.location.lng();
+        gon.lat=results[0].geometry.location.lat();
         handler.map.centerOn({ lat: gon.lat, lng: gon.lng }); 
         deleteMarkers();
         markers = handler.addMarkers([
@@ -238,10 +238,10 @@ function testdragend(pos)
   
   var tt_lat = document.getElementById("gameholder_lat");
   var tt_lng = document.getElementById("gameholder_lng");
-  tt_lat.value = pos.k;
-  tt_lng.value = pos.B;
+  tt_lat.value = pos.lat();
+  tt_lng.value = pos.lng();
   handler.getMap().setZoom(16);
-  handler.map.centerOn({ lat: pos.k, lng: pos.B }); 
+  handler.map.centerOn({ lat: pos.lat(), lng: pos.lng() }); 
   reverseGeocode(pos,document.getElementById("tag_0").checked);
 }
 
