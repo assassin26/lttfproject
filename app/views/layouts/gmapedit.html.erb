@@ -141,11 +141,11 @@ function codeAddress() {
     geocoder.geocode( { 'address': address}, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
 
-
+        
   
-        gon.lng=results[0].geometry.location.A;
+        gon.lng=results[0].geometry.location.B;
         gon.lat=results[0].geometry.location.k;
-
+       
         handler.map.centerOn({ lat: gon.lat, lng: gon.lng }); 
         deleteMarkers();
         markers = handler.addMarkers([
@@ -203,9 +203,9 @@ function testdragend(pos)
   var tt_lat = document.getElementById("ttcourt_lat");
   var tt_lng = document.getElementById("ttcourt_lng");
   tt_lat.value = pos.k;
-  tt_lng.value = pos.A;
+  tt_lng.value = pos.B;
    handler.getMap().setZoom(16);
-  handler.map.centerOn({ lat: pos.k, lng: pos.A }); 
+  handler.map.centerOn({ lat: pos.k, lng: pos.B }); 
   reverseGeocode(pos,document.getElementById("tag_0").checked);
 }
 

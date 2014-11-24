@@ -171,7 +171,7 @@ function codeAddress() {
 
 
 
-        gon.lng=results[0].geometry.location.A;
+        gon.lng=results[0].geometry.location.B;
         gon.lat=results[0].geometry.location.k;
         handler.map.centerOn({ lat: gon.lat, lng: gon.lng }); 
         deleteMarkers();
