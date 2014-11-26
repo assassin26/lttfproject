@@ -37,3 +37,4 @@ coverage/*
 capybara-*.html
 .rspec
 gemfile.lock
+/config/client.p12

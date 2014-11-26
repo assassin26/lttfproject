@@ -32,7 +32,8 @@ class TtcourtsController < ApplicationController
       @ttcourts_hash.push(@tempcourt)
     end
     
-    
+    @ttcourts_views_record=Webpageview.first_or_initialize
+    @ttcourts_views_record.ttcourts_views_increment
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @ttcourts }
