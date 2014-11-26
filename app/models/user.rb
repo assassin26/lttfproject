@@ -24,9 +24,9 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable ,:omniauthable
-  has_one :playerprofile 
-  has_one :gameholder
-  has_many :authorizations
+  has_one :playerprofile, dependent: :destroy
+  has_one :gameholder, dependent: :destroy
+  has_many :authorizations, dependent: :destroy
   attr_accessible :id, :username, :email, :fbaccount, :password, :password_confirmation, :remember_me,:playerphoto ,:playerprofile_attributes
    attr_accessible :phone
   attr_accessible :role_ids
