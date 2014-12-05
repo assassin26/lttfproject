@@ -48,7 +48,7 @@ class Gamegroup < ActiveRecord::Base
       when 'team' 
         playerlist=Array.new
         self.groupattendants.each do |attendrecord|
-        playerlist=playerlist+attendrecord.attendants.in_groups_of(10,false) 
+        playerlist=playerlist+attendrecord.attendants.in_groups_of(20,false) 
         end 
         return playerlist 
     end

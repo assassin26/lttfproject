@@ -29,14 +29,20 @@ def index
   end 
 
   @player_current_score=Hash.new
+  @groupaddtndant_registor_name=Hash.new
   @gamegroups.each do |gamegroup|
-     gamegroup.allgroupattendee.flatten.each do |player|
+    gamegroup.allgroupattendee.flatten.each do |player|
       if player
          @player_current_score[player.player_id]=User.find(player.player_id).playerprofile.curscore 
       end   
-   end
+    end
+    if gamegroup.regtype=='team'
+      gamegroup.groupattendants.each do |attendant|
+        @groupaddtndant_registor_name[attendant.id]=User.find(attendant.registor_id).username
+      end  
+    end
   end
-
+ 
 end
 def create_attendee_array(gamegroups)
   @attendee_array=Hash.new
@@ -217,12 +223,17 @@ def doubleregistration(group_id, playerids)
   end 
 end  
 
-def teamregistration(group_id, playerids,teamname)
+def teamregistration(group_id, playerids,teamname,old_attendantrecord)
   
   @curgroup=Gamegroup.find(group_id)
-  attendantrecord=@curgroup.groupattendants.build 
+  if !old_attendantrecord
+     attendantrecord=@curgroup.groupattendants.build 
+  else
+    attendantrecord=Groupattendant.find(old_attendantrecord) 
+    attendantrecord.attendants.delete_all
+  end  
   @playerlist=Array.new
-  @playerlist=User.find(playerids).in_groups_of(10,false) if playerids
+  @playerlist=User.find(playerids).in_groups_of(20,false) if playerids
 
   Groupattendant.transaction do
      
@@ -257,7 +268,13 @@ def cancel_player_registration
     @attendantrecord.destroy
     redirect_to  holdgame_gamegroups_path(@holdgame, {:targroupid=>@curgroup.id})
 end 
-
+def cancel_player_registration_inteam
+    @attendantrecord=Groupattendant.find(params[:user_in_groupattendant])
+    @curgroup=@attendantrecord.gamegroup
+    Attendant.where(:groupattendant_id=>params[:user_in_groupattendant],:player_id=>params[:player_id]).first.destroy
+    #@attendantrecord.destroy
+    redirect_to  holdgame_gamegroups_path(@holdgame, {:targroupid=>@curgroup.id})
+end
 
 
  
@@ -266,7 +283,7 @@ def teamplayersinput
   @playerlist=Array.new #to avoid pass nil array to view 
   if params[:registration]
     if params[:teamname]!=""
-      teamregistration(params[:format], params[:playerid].uniq, params[:teamname])
+      teamregistration(params[:format], params[:playerid].uniq, params[:teamname],nil)
     else
        @playerlist=User.find(params[:playerid].uniq) if params[:playerid]
        @curgroup=Gamegroup.find(params[:format])
@@ -277,7 +294,7 @@ def teamplayersinput
       @curgroup=Gamegroup.find(params[:format])
     
     elsif params[:getplayerfromuser] 
-      if !params[:playerid] || params[:playerid].length<10
+      if !params[:playerid] || params[:playerid].length<20
          @playerlist=User.find(params[:playerid].uniq) if params[:playerid]
          @curgroup=Gamegroup.find(params[:format])
          @teamname=params[:teamname]
@@ -293,7 +310,55 @@ def teamplayersinput
       else
          @playerlist=User.find(params[:playerid].uniq) if params[:playerid]
          @curgroup=Gamegroup.find(params[:format])
-         flash[:notice]='團隊球員不得超過10位!'
+         flash[:notice]='團隊球員不得超過20位!'
+      end  
+    end 
+    
+    redirect_to  holdgame_gamegroups_path(@holdgame, {:targroupid=>@curgroup.id}) if (params[:registration]&&params[:teamname]!="")  || params[:quit]      
+end
+def teamplayersadd
+
+  flash.clear
+   if params[:name]=='add'
+      @groupattendant_id=params[:row_group].to_i
+      @teamname=Groupattendant.find(params[:row_group].to_i).teamname
+      teamplayer_ids=params[:teamarray].collect{|s| s.to_i}
+      curplayers=Attendant.find(teamplayer_ids).collect(&:player_id)
+      @playerlist=User.find( curplayers)
+   else
+     @groupattendant_id=params[:groupattendantid]
+     @playerlist=Array.new #to avoid pass nil array to view
+    end  
+  if params[:registration]
+    if params[:teamname]!=""
+      teamregistration(params[:format], params[:playerid].uniq, params[:teamname],params[:groupattendantid])
+    else
+       @playerlist=User.find(params[:playerid].uniq) if params[:playerid]
+       @curgroup=Gamegroup.find(params[:format])
+       flash[:notice]='隊名不得為空白!請重新輸入'
+    end 
+                        
+    elsif params[:quit]
+      @curgroup=Gamegroup.find(params[:format])
+    
+    elsif params[:getplayerfromuser] 
+      if !params[:playerid] || params[:playerid].length<20
+         @playerlist=User.find(params[:playerid].uniq) if params[:playerid]
+         @curgroup=Gamegroup.find(params[:format])
+         @teamname=params[:teamname]
+        if params[:keyword] 
+          @newplayer=get_inputplayer(params[:playerid],params[:keyword])
+      
+          if @newplayer  
+            @playerlist.push(@newplayer)
+          end  
+        else
+          flash[:notice]='球友資料皆不為空白!請重新輸入'
+        end 
+      else
+         @playerlist=User.find(params[:playerid].uniq) if params[:playerid]
+         @curgroup=Gamegroup.find(params[:format])
+         flash[:notice]='團隊球員不得超過20位!'
       end  
     end 
     

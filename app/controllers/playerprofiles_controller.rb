@@ -51,7 +51,6 @@ class PlayerprofilesController < ApplicationController
     data_table.new_column('date', '日期')
     data_table.new_column('number', '積分走勢')
     if  @playerprofile.gamehistory
-
       @scorechangearray = @playerprofile.gamehistory.split(/\n/)
     
       data_table.add_rows(@scorechangearray.count)

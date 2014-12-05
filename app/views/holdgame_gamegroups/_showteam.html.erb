@@ -97,7 +97,7 @@
                               :method => :delete %></td>
   <% end %>                            
   <% if current_user %>
-   <td><%= button_to '報名參賽', teamplayersinput_holdgame_gamegroups_path(@holdgame,gamegroup, :name => 'init') , :method=>:get  %></td>
+   <td><%= link_to '報名參賽', teamplayersinput_holdgame_gamegroups_path(@holdgame,gamegroup, :name => 'init') , :class=> "button radius"  %></td>
   <% end %>  
   <td>  <%= link_to "輸出到excel", groupdumptoxls_holdgame_gamegroups_path(@holdgame,:gamegroup_id=>gamegroup.id,format: "xls") ,:class=> "button radius" %></td>             
 </tr>
@@ -118,7 +118,9 @@
         <th style="text-align:center" >序號</th>         
         <th style="text-align:center" >會員編號</th>
         <th style="text-align:center" >會員姓名</th>
-        <th style="text-align:center" >目前積分</th>
+        <th style="text-align:center" >目前積分/報名積分</th>
+        <th style="text-align:center"></th>
+        <th style="text-align:center" >備註</th>
          </tr>
         </thead>  
         <tbody>
@@ -126,14 +128,28 @@
          
               <%  attendeearray.each_with_index do |row_group,groupindex| %> 
                 <tr>
-                <td  style="text-align:center" colspan=4 ><font color='blue'><strong> <%= row_group[0].teamname %></font></strong></td>
-                </tr>
-                <% if row_group[0].registor_id==current_user.id ||@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser)   %>
+                <td  style="text-align:center" colspan= 3 ><font color='red'><strong>(<%= groupindex+1 %>). 隊名:<%= row_group[0].teamname %></font></strong><br>
+                   <font color='blue'>報名球友:<%=  @groupaddtndant_registor_name[row_group[0].groupattendant_id.to_i] %>
+                  </font>
+                </td>
+                
+                <% if current_user && (row_group[0].registor_id==current_user.id ||@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser))   %>
                
-                <tr>
-                <td  style="text-align:center" colspan=4 >
-                <%= button_to '取消報名', cancel_player_registration_holdgame_gamegroups_path(@holdgame, gamegroup, :user_in_groupattendant=>gamegroup.find_player_in_attendants(row_group[0].player_id)) ,  {:onclick => "return confirm('確定取消報名?')", :method => :post}  %>
+                
+                <td >
+                <%= button_to '取消整隊報名', cancel_player_registration_holdgame_gamegroups_path(@holdgame, gamegroup, :user_in_groupattendant=>gamegroup.find_player_in_attendants(row_group[0].player_id) ) ,  {:onclick => "return confirm('確定取消報名?')", :method => :post}  %>
+                </td>
+                <td> 
+               
+                <%= link_to '新增隊員', teamplayersadd_holdgame_gamegroups_path(@holdgame,gamegroup,:teamarray=>row_group, :row_group=>row_group[0].groupattendant_id, :name => 'add'),:class=> "button radius"   %>
                    
+                </td> 
+                <td>
+                  <%if (groupindex+1)>gamegroup.noofplayers%>
+                    <font color='red'><strong/>候補<strong/></font>
+                  <%else%>
+                    <font color='blue'><strong/>正選<strong/></font>
+                  <%end%> 
                 </td>  
                 </tr> 
                 <%end%>
@@ -145,11 +161,25 @@
                 <td style="text-align:center"><font color='blue'><strong> <%=  player.player_id  %></font></strong></td>
                 <td  style="text-align:center">
                   <%= link_to(playerprofile_path(player.player_id)) do %>
-                    <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"><%=  player.name %></font><br> 
-                    <font color="red">( <%= @player_current_score[player.player_id]%>) </font>
+                    <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"><%=  player.name %></font> 
+                   
                   <% end %>
                 </td>
-                <td  style="text-align:center"><font color='blue'><strong> <%=  player.curscore %></font></strong></td>
+                <td  style="text-align:center"><font color='blue'><strong> <%=  player.curscore %></strong></font>
+                  <%if @player_current_score[player.player_id]!= player.curscore %>
+                  <br>
+                     <font color='red'><strong>(<%= player.curscore %>)<strong/></font>
+                  <%end%>
+                  
+                </td>
+                <td style="text-align:center">
+                    <% if current_user && (player.player_id==current_user.id ||  player.registor_id==current_user.id ||@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser) )  %>
+                 
+                      <%= button_to '取消報名', cancel_player_registration_inteam_holdgame_gamegroups_path(@holdgame, gamegroup, :user_in_groupattendant=>gamegroup.find_player_in_attendants(player.player_id), :player_id=>player.player_id) ,  {:onclick => "return confirm('確定取消報名?')", :method => :post}  %>
+                    <%end%>
+                </td> 
+                <td>
+                </td>  
                 <% player_index+=1 %>
                 </tr>  
                 <%end%>
