@@ -111,6 +111,9 @@
           <th style="text-align:center">目前積分</th>
           <th style="text-align:center">備註/報名積分</th>
           <th style="text-align:center"></th>
+           <% if current_user && (@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser) )  %>
+          <th style="text-align:center">電話</th>
+          <% end %>
           </tr>
         </thead>  
 
@@ -128,7 +131,8 @@
                 <td style="text-align:center">
                   <%= link_to(playerprofile_path(player.player_id)) do %>
                     <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"><%=  player.name %></font>
-                  <% end %>
+                  <% end %>                   
+
                 </td>
                 <td style="text-align:center">
                   <font color='blue'><strong><%= @player_current_score[player.player_id] %><strong/></font></td>
@@ -146,13 +150,18 @@
                  <font color='red'><strong>(<%= player.curscore %>)<strong/></font>
                 <%end%>
                 </td>
-                <td style="text-align:center">
-                    <% if current_user && (player.player_id==current_user.id ||  player.registor_id==current_user.id ||@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser) )  %>
-                 
+               
+                <% if current_user && (player.player_id==current_user.id ||  player.registor_id==current_user.id ||@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser) )  %>
+                 <td style="text-align:center">    
                       <%= button_to '取消報名', cancel_player_registration_holdgame_gamegroups_path(@holdgame, gamegroup, :user_in_groupattendant=>gamegroup.find_player_in_attendants(player.player_id)) ,  {:onclick => "return confirm('確定取消報名?')", :method => :post}  %>
-                    <%end%>
+                    
                 </td>  
-                
+                <%end%>
+                <td>
+                 <% if current_user && (@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser) ) &&(player.phone)  %>
+                  <%= player.phone %>
+                  <%end%>
+                </td>  
                 </tr> 
     
               <% end %>
