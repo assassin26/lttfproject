@@ -508,14 +508,20 @@ def destroy
   redirect_to holdgame_gamegroups_url( @holdgame )
 end
 def groupdumptoxls
-
-   @gamegroup = @holdgame.gamegroups.find( params[:gamegroup_id] )
-   @groupttendee= @gamegroup.groupattendants
-   @attendee =@gamegroup.allgroupattendee
-   filename=@holdgame.gamename+@gamegroup.groupname
-   headers["Content-Disposition"] = "attachment; filename=\"#{filename}.xls\"" 
-   respond_to do |format|
-     format.xls 
+ 
+  @player_current_score=Hash.new
+  @gamegroup = @holdgame.gamegroups.find( params[:gamegroup_id] )
+  @gamegroup.allgroupattendee.flatten.each do |player|
+      if player
+         @player_current_score[player.player_id]=User.find(player.player_id).playerprofile.curscore 
+      end   
+  end
+  @groupttendee= @gamegroup.groupattendants
+  @attendee =@gamegroup.allgroupattendee
+  filename=@holdgame.gamename+@gamegroup.groupname
+  headers["Content-Disposition"] = "attachment; filename=\"#{filename}.xls\"" 
+  respond_to do |format|
+    format.xls 
   end
 end  
 protected
