@@ -11,6 +11,7 @@ Lttfproject::Application.routes.draw do
           post :registration
           post :cancel_current_user_registration
           post :cancel_player_registration
+          post :cancel_player_registration_indouble
           post :cancel_player_registration_inteam
           get :playerinput
           get :singleplayerinput

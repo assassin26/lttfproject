@@ -192,24 +192,28 @@ def singleregistration(group_id, playerids)
   end 
 
 end 
+
 def doubleregistration(group_id, playerids)
   
   @curgroup=Gamegroup.find(group_id)
-  attendantrecord=@curgroup.groupattendants.build 
+
   @playerlist=Array.new
   @playerlist=User.find(playerids).in_groups_of(2) if playerids
 
   Groupattendant.transaction do
      
-    attendantrecord.regtype= @curgroup.regtype
-    attendantrecord.phone=current_user.phone
-    attendantrecord.registor_id=current_user.id
-    if attendantrecord.save
+   
+    #attendantrecord.phone=current_user.phone
+    #attendantrecord.registor_id=current_user.id
+    
       @playerlist.each do |players|
+        attendantrecord=@curgroup.groupattendants.build 
+        attendantrecord.registor_id=current_user.id
+        attendantrecord.regtype= @curgroup.regtype
         for player in players
           attendant=attendantrecord.attendants.build
           attendant.regtype=attendantrecord.regtype
-          attendant.phone=attendantrecord.phone
+          attendant.phone=player.phone
           attendant.registor_id=attendantrecord.registor_id
           attendant.player_id=player.id
           attendant.name=player.username
@@ -217,12 +221,12 @@ def doubleregistration(group_id, playerids)
           attendant.curscore=player.playerprofile.curscore
           attendant.save
         end
+        attendantrecord.save
       end 
-    end
+   
    
   end 
 end  
-
 def teamregistration(group_id, playerids,teamname,old_attendantrecord)
   
   @curgroup=Gamegroup.find(group_id)
@@ -246,7 +250,7 @@ def teamregistration(group_id, playerids,teamname,old_attendantrecord)
         for player in players
           attendant=attendantrecord.attendants.build
           attendant.regtype=attendantrecord.regtype
-          attendant.phone=attendantrecord.phone
+          attendant.phone=player.phone
           attendant.registor_id=attendantrecord.registor_id
           attendant.teamname=attendantrecord.teamname
           attendant.player_id=player.id
@@ -268,10 +272,22 @@ def cancel_player_registration
     @attendantrecord.destroy
     redirect_to  holdgame_gamegroups_path(@holdgame, {:targroupid=>@curgroup.id})
 end 
-def cancel_player_registration_inteam
+def cancel_player_registration_indouble
+    
     @attendantrecord=Groupattendant.find(params[:user_in_groupattendant])
     @curgroup=@attendantrecord.gamegroup
-    Attendant.where(:groupattendant_id=>params[:user_in_groupattendant],:player_id=>params[:player_id]).first.destroy
+    @attendantrecord.destroy
+    #Attendant.where(:groupattendant_id=>params[:user_in_groupattendant],:player_id=>params[:player_id]).first.destroy
+    #@attendantrecord.destroy
+    redirect_to  holdgame_gamegroups_path(@holdgame, {:targroupid=>@curgroup.id})
+end
+
+
+def cancel_player_registration_inteam
+   
+    @attendantrecord=Groupattendant.find(params[:user_in_groupattendant])
+    @curgroup=@attendantrecord.gamegroup
+    @tempattendant=Attendant.where(:groupattendant_id=>params[:user_in_groupattendant],:player_id=>params[:player_id]).first.destroy
     #@attendantrecord.destroy
     redirect_to  holdgame_gamegroups_path(@holdgame, {:targroupid=>@curgroup.id})
 end

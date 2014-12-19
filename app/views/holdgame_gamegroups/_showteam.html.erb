@@ -162,10 +162,13 @@
                 <td  style="text-align:center">
                   <%= link_to(playerprofile_path(player.player_id)) do %>
                     <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"><%=  player.name %></font> 
-                   
+                  
                   <% end %>
+                  <% if current_user && (@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser) ) &&(player.phone)  %>
+                    <br><%= player.phone %>
+                  <%end%>
                 </td>
-                <td  style="text-align:center"><font color='blue'><strong> <%=  player.curscore %></strong></font>
+                <td  style="text-align:center"><font color='blue'><strong> <%=  @player_current_score[player.player_id] %></strong></font>
                   <%if @player_current_score[player.player_id]!= player.curscore %>
                   <br>
                      <font color='red'><strong>(<%= player.curscore %>)<strong/></font>
