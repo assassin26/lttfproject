@@ -5,6 +5,7 @@ class Holdgame < ActiveRecord::Base
   attr_accessible :gameinfofile, :gamedays
   belongs_to :gameholder
   has_many :gamegroups , dependent: :destroy
+  has_one :uploadgame
   after_commit :assign_informs_from_holder
   scope :forgamesmaps, order(' zipcode ASC , startdate ASC ')
   default_scope  order('startdate ASC , zipcode ASC ')

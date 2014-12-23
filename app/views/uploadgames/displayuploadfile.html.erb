@@ -1,7 +1,7 @@
 <%= form_tag savetoupload_uploadgames_path, multipart: true do %>
   <p align=center><%= link_to '返回前頁',  :back %> </p>
   
-
+<%= hidden_field_tag 'holdgame_id', @holdgame.id  %>
 
   <div class="table-responsive datagrid">
     <table class="datatable table-striped" border=1 link=blue>

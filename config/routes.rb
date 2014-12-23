@@ -38,6 +38,7 @@ Lttfproject::Application.routes.draw do
       get  :uploadfile_fromholdgame
       post :savetoupload
       post :publishuploadgame
+      post :publish_trycalculation
       post :calculategamepage
       post :trycalculation
       post :caculatescore

@@ -9,6 +9,7 @@ class Uploadgame < ActiveRecord::Base
   scope :waitingforprocess, where( :scorecaculated => false )
   scope :finsihedprocess, where( :scorecaculated =>true )
   scope :waitingchecking, where( :scorecaculated => false ,:publishedforchecking=>true)
+  belongs_to :holdgame
   def self.findlastrow(worksheet, targetcol)
     @ws_row=worksheet.num_rows
     loop do 
@@ -29,7 +30,7 @@ class Uploadgame < ActiveRecord::Base
     newgame
   end
 
-  def self.GetPlayersinfo (gameinfows)
+  def self.GetPlayersinfo (gameinfows, oldplayerssummery)
     player_info_start_row =7
     @NoofPlayers= findlastrow(gameinfows,1) - player_info_start_row+1
   
@@ -52,13 +53,37 @@ class Uploadgame < ActiveRecord::Base
       @Curplayer[5] =0   #LoseGames
       @Curplayer[6] = 0  #AScore
       @Curplayer[7] = 0   #Scorechange
-      @Curplayer[8] = nil #SuggestScore
-      @Curplayer[9] = nil #adjustScore
+
+      if oldplayerssummery
+        oldplayerinfo=@oldplayerssummery.find{|v| (v["id"]==@Curprofile.user_id)}
+      end  
+      @Curplayer[8] = (oldplayerinfo==nil) ? nil : oldplayerinfo["suggestscore"] #SuggestScore
+      @Curplayer[9] = (oldplayerinfo==nil) ? nil : oldplayerinfo["adjustscore"] #adjustScore
+      @Curplayer[10] = @Curprofile.curscore #original bgamescore without adjustment
       @CurGamePlayersInfo.push(@Curplayer)		
     end 
     @CurGamePlayersInfo		
   end
+  def updatePlayerResultFromadjustPlayersinfo (adjustGamePlayersInfo)
+     curlines=""
+     adjustGamePlayersInfo.each do |player|
+      curlines=curlines+ "\n" if curlines!=""   
+      curlines=curlines+"_"+player["serial"].to_s 
+      curlines=curlines+"_"+player["id"].to_s
+      curlines=curlines+"_"+player["name"].to_s
+      curlines=curlines+"_"+player["bgamescore"].to_s
+      curlines=curlines+"_"+player["wongames"].to_s
+      curlines=curlines+"_"+player["losegames"].to_s
+      curlines=curlines+"_"+player["agamescore"].to_s
+      curlines=curlines+"_"+player["scorechanged"].to_s
+      curlines=curlines+"_"+player["suggestscore"].to_s
+      curlines=curlines+"_"+player["adjustscore"].to_s
+      curlines=curlines+"_"+player["original bscore"].to_s
+    end
+    self.players_result= curlines
+  
 
+  end
   def self.Processgamerocords(sheets)
     gameinfoheadrow=6
     gameinfoStartcol=13
@@ -273,12 +298,55 @@ class Uploadgame < ActiveRecord::Base
 
     players
   end 
+ def getplayersummary
+    return nil if !self.players_result
+    @currentgamesummery= self.players_result.split(/\n/)
+    @playerssummery=Array.new
 
-  def self.upload(fileurl)
+    @currentgamesummery.each do |playersummery|
+      @player=Hash.new
+      @dummy,@player["serial"],@player["id"], @player["name"],@player["bgamescore"],@player["wongames"],@player["losegames"],@player["agamescore"],
+                @player["scorechanged"],@player["suggestscore"],@player["adjustscore"],@player["original bscore"]= playersummery.split("_")
+      @player["id"]=@player["id"].to_i
+      @player["bgamescore"]=@player["bgamescore"].to_i
+      @player["wongames"]=@player["wongames"].to_i
+      @player["losegames"]=@player["losegames"].to_i
+      @player["agamescore"]=@player["agamescore"].to_i
+      @player["scorechanged"]=@player["scorechanged"].to_i
+      @player["suggestscore"]=@player["suggestscore"].to_i
+      @player["adjustscore"]=@player["adjustscore"].to_i if @player["adjustscore"]!=nil
+      @player["original bscore"]=@player["original bscore"].to_i if @player["original bscore"]!=nil
+      @playerssummery.push(@player)
+    end  
+    @playerssummery  
+  end 
+
+  def getdetailgamesrecord
+
+    gamesrecords=Array.new
+        
+    detailgamesrecord= self.detailgameinfo.split("]")
+     
+
+    detailgamesrecord.each do |singlegamerecord|
+    
+      singlegame=singlegamerecord.split("|")
+      gamesarray=Hash.new
+      gamesarray["group"]=singlegame[0]
+      players=singlegame[1].split(":")
+      gamesarray["Aplayer"]=players[0]
+      gamesarray["Bplayer"]=players[1]
+      gamesarray["gameresult"]=singlegame[2]
+      dummy,gamesarray["detailrecords"] = singlegame[3].split("[")
+      gamesrecords.push(gamesarray)
+    end
+    gamesrecords
+  end  
+  def self.upload(holdgame)
    client = Google::APIClient.new(
          :application_name => 'lttfprojecttest',
           :application_version => '1.0.0')
-   fileid=APP_CONFIG['Inupt_File_Template'].to_s.match(/[-\w]{25,}/).to_s
+   #fileid=APP_CONFIG['Inupt_File_Template'].to_s.match(/[-\w]{25,}/).to_s
    
     keypath = Rails.root.join('config','client.p12').to_s
     key = Google::APIClient::KeyUtils.load_from_pkcs12( keypath, 'notasecret')
@@ -293,13 +361,17 @@ class Uploadgame < ActiveRecord::Base
      client.authorization.fetch_access_token!
  
     connection = GoogleDrive.login_with_oauth( client.authorization.access_token)
-	  @newgame=Uploadgame.new
-
-    spreadsheet = connection.spreadsheet_by_url(fileurl)
+	  #@newgame=Uploadgame.new
+    spreadsheet = connection.spreadsheet_by_url(holdgame.inputfileurl)
+    
+    @newgame =   (holdgame.uploadgame==nil) ? holdgame.build_uploadgame : holdgame.uploadgame
+    #@newgame=Uploadgame.waitingforprocess.where(:gamename => holdgame.gamename).first_or_initialize
+   
+    @oldplayerssummery=@newgame.getplayersummary
     @newgame.gamename =spreadsheet.title()
     @gameinfows=spreadsheet.worksheets[0] 
     @newgame=GetBasicGameInfofromWs(@newgame, @gameinfows)
-    @CurPlayersInfo=GetPlayersinfo(@gameinfows)
+    @CurPlayersInfo=GetPlayersinfo(@gameinfows,@oldplayerssummery)
     
     @Gamerecords= Processgamerocords(spreadsheet.worksheets)
    
@@ -309,7 +381,8 @@ class Uploadgame < ActiveRecord::Base
     curlines=""
     
     @CurPlayersInfo.each do |player|
-
+      
+  
       curlines=curlines+ "\n" if curlines!="" 	
       curlines=curlines+"_"+player[0].to_s 
       curlines=curlines+"_"+player[2].to_s
@@ -321,6 +394,7 @@ class Uploadgame < ActiveRecord::Base
       curlines=curlines+"_"+player[7].to_s
       curlines=curlines+"_"+player[8].to_s
       curlines=curlines+"_"+player[9].to_s
+      curlines=curlines+"_"+player[10].to_s
     end
     @newgame.players_result= curlines
     @newgame.scorecaculated=false 

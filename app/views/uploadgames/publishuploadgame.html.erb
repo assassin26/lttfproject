@@ -3,7 +3,7 @@
 <p align=center>
   <%= link_to '返回前頁',  :back %>
 </p>
-<%= form_tag trycalculation_uploadgames_path, multipart: true do %>
+<%= form_tag publish_trycalculation_uploadgames_path, multipart: true do %>
 
 
 
@@ -53,9 +53,9 @@
         <td colspan=10>
         <div class="text-center">
           <%= submit_tag "積分試算" , :name => "save_option_a" %>
+              
+          <%= submit_tag "以試算結果進行公告查核" , :name => "save_option_b",  data: { confirm: '確定以此次試算結果進行公告查核?' }, :disabled => @zeroscoreplayers!=[] %>
        
-          <%= submit_tag "以試算結果更新積分" , :name => "save_option_b" ,  data: { confirm: '確定進行積分計算及更新積分檔案?' }, :disabled => @zeroscoreplayers!=[] %>
-        
 
         </div>
         </td> 
