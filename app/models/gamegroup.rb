@@ -61,9 +61,7 @@ class Gamegroup < ActiveRecord::Base
     end 
     false 
   end
-  def check_official(player_id)
-    
-  end
+  
   def totalresgisteredsplayersno
    
     return self.groupattendants.length
