@@ -230,7 +230,7 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
           end
           @player.save 
           @playerscore=player 
-         #UserMailer.adjustscore_publish_notice(@player,@playerscore,@uploadgame).deliver
+          UserMailer.adjustscore_publish_notice(@player,@playerscore,@uploadgame).deliver
         end
       end
     end
@@ -282,13 +282,13 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
 
           @player.save
           @playerscore=player
-         # UserMailer.newscore_publish_notice(@player,@playerscore,@uploadgame.gamename).deliver
+          UserMailer.newscore_publish_notice(@player,@playerscore,@uploadgame.gamename).deliver
         end
       end
     end
      @newgame.players_result=curlines  
      @newgame.save
-     #UserMailer.newscore_publish_notice_to_FB( @newgame).deliver  
+     UserMailer.newscore_publish_notice_to_FB( @newgame).deliver  
   end  
    def publish_trycalculation
    # @uploadgame = Uploadgame.find(params[:game_id])
@@ -323,8 +323,8 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
         @uploadgame.updatePlayerResultFromadjustPlayersinfo(@adjustplayers)
         @uploadgame.publishedforchecking = true
         @uploadgame.save
-        #send_publish_notice_to_players(@uploadgame)
-         @uploadgames = Uploadgame.waitingforprocess.page(params[:page]).per(10)
+        send_publish_notice_to_players(@uploadgame)
+        @uploadgames = Uploadgame.waitingforprocess.page(params[:page]).per(10)
         flash[:success]="本賽事公告作業完成!"
     
       redirect_to :action => "index"
