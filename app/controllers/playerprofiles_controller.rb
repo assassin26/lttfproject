@@ -46,7 +46,7 @@ class PlayerprofilesController < ApplicationController
    
     session[:player_id] = params[:id]
     @playerprofile = Playerprofile.find(params[:id])
-    
+    @futuregames=@playerprofile.user.find_reg_unplay_games
     data_table = GoogleVisualr::DataTable.new
     data_table.new_column('date', '日期')
     data_table.new_column('number', '積分走勢')
@@ -111,7 +111,7 @@ class PlayerprofilesController < ApplicationController
     end
    
   end
-
+  
   # GET /playerprofiles/new
   # GET /playerprofiles/new.json
   def new

@@ -51,8 +51,34 @@
     </td>
   </table>
 </div>
+<br></br>
 
+   <div class="table-responsive datagrid">
+      <table class="datatable table-striped" border=1>
+        <caption class="text-center" ><font color='red'><strong>已報名之比賽(請記得要出席)</strong></font></caption>  
+        <thead>
+          <tr>
+          <th>比賽日期</th>
+          <th>比賽名稱</th>
+          <th>比賽場地</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%  @futuregames.each do |holdgame| %>
+            <tr>
+              <td> <%= holdgame.startdate %> </td>
+              <td> <%= link_to holdgame_gamegroups_path(holdgame) do %>
+                      <i class="fa fa-hand-o-up"></i>&nbsp;<font color="#3A01DF"><%= holdgame.gamename %></font>
+                   <% end %>     
+              </td>
+               <td> <%= holdgame.courtname %> </td> 
 
+             </tr>
+          <% end %>
+        </tbody>
+        
+      </table>
+    </div>
 <br></br>
 
    <div class="table-responsive datagrid">

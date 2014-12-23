@@ -81,6 +81,16 @@ end
     end   
      
   end
+  def find_reg_unplay_games
+      
+      attendants=Attendant.where(:player_id=>self.id).find_all{|v| (v.groupattendant.gamegroup.holdgame.startdate>= Time.zone.now.to_date) }
+      return [] if attendants.empty?
+      @games=Array.new
+      attendants.each do |attendant|
+        @games.push(attendant.groupattendant.gamegroup.holdgame)
+      end
+      return @games.uniq
+  end  
  private
     def username_without_
      
