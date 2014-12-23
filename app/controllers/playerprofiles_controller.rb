@@ -11,8 +11,7 @@ class PlayerprofilesController < ApplicationController
        
    #@playerprofiles = Playerprofile.all
      @playerprofiles = Playerprofile.includes(:user).order(sort_column + " " + sort_direction).page(params[:page]).per(50)
-
-
+     @membercount=Playerprofile.all.size
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @playerprofiles }
