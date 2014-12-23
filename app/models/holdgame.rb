@@ -30,7 +30,6 @@ class Holdgame < ActiveRecord::Base
       self.contact_name=self.gameholder.name
       self.contact_phone=self.gameholder.phone
       self.contact_email=self.gameholder.email
-
    	  self.save
     else
       self.zipcode=TWZipCode_hash[self.city][self.county]
