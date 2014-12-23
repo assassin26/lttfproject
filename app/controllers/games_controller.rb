@@ -3,7 +3,7 @@ class GamesController < ApplicationController
   # GET /games.json
   def index
     session[:player_id]="0"
-    @games = Game.page(params[:page]).order(" created_at DESC").per(100)
+    @games = Game.order(" created_at DESC").page(params[:page]).per(50)
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @games }
