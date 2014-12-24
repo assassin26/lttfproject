@@ -89,7 +89,7 @@ end
       attendants.each do |attendant|
         @games.push(attendant.groupattendant.gamegroup.holdgame)
       end
-      return @games.uniq
+      return @games.sort_by { |hsh| hsh[:startdate] }.uniq
   end  
  private
     def username_without_
