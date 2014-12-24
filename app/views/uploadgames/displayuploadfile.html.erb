@@ -1,7 +1,10 @@
-<%= form_tag savetoupload_uploadgames_path, multipart: true do %>
-  <p align=center><%= link_to '返回前頁',  :back %> </p>
+ <p align=center><%= link_to '返回前頁',  :back %> </p>
   
-<%= hidden_field_tag 'holdgame_id', @holdgame.id  %>
+<%if !@Playerlisterr %>
+
+  <%= form_tag savetoupload_uploadgames_path, multipart: true do %>
+   
+  <%= hidden_field_tag 'holdgame_id', @holdgame.id  %>
 
   <div class="table-responsive datagrid">
     <table class="datatable table-striped" border=1 link=blue>
@@ -77,9 +80,37 @@
          
     </table>  
   </div>
-<% end %>
-<p align=center><%= link_to '返回前頁',  :back %> </p>   
-    
+  <% end %>
+  <p align=center><%= link_to '返回前頁',  :back %> </p>   
+<%else%>
+<div class="table-responsive datagrid">
+    <table class="datatable table-striped" border=1 link=blue>
+      <caption class="text-center" ><strong><font color='red'>查無註冊資料球友列表，請再檢查名字是否輸錯?</font></strong></caption>
+      <thead>
+        <tr>
+        <th>序號</th>
+        <th>姓名</th>
+        </tr>
+      </thead>
+      <tbody>  
+        <%  @Erroplayerlist.each do |player| %>
+  
+          <tr>  
+          <td> <%= player[0] %></td>
+          <td>  <%= player[1] %></td>
+      
+          </tr>
+        <% end %>
+      </tbody>  
+       
+    </table> 
+
+  </div>
+    <p align=center> 
+      <%= link_to "重新輸入成績",  @holdgame.inputfileurl ,:target=> '_blank' , :class=> "button radius" %>
+      <%= link_to '返回前頁',  :back, :class=> "button radius" %> 
+    </p>
+<%end%>    
   
 
 

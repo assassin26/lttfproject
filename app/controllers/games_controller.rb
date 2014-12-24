@@ -4,6 +4,7 @@ class GamesController < ApplicationController
   def index
     session[:player_id]="0"
     @games = Game.order(" created_at DESC").page(params[:page]).per(50)
+    @gamescount=Game.all.size
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @games }

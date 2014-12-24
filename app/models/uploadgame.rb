@@ -44,23 +44,25 @@ class Uploadgame < ActiveRecord::Base
       Rails.logger.info(@Curplayer[1])
       Rails.logger.info(@Curplayer[1].length)
       @Curprofile = Playerprofile.where( :name => @Curplayer[1] ).first
-     
-      @Curplayer[2]= @Curprofile.user_id #id
-      @Curplayer[3] = @Curprofile.curscore #Bscore
-      @Curplayer[3]=@Curprofile.initscore if @Curplayer[3]==nil
+      if @Curprofile
+        @Curplayer[2]= @Curprofile.user_id #id
+        @Curplayer[3] = @Curprofile.curscore #Bscore
+        @Curplayer[3]=@Curprofile.initscore if @Curplayer[3]==nil
+        @Curplayer[4] = 0  #Wongames
+        @Curplayer[5] =0   #LoseGames
+        @Curplayer[6] = 0  #AScore
+        @Curplayer[7] = 0   #Scorechange
 
-      @Curplayer[4] = 0  #Wongames
-      @Curplayer[5] =0   #LoseGames
-      @Curplayer[6] = 0  #AScore
-      @Curplayer[7] = 0   #Scorechange
-
-      if oldplayerssummery
-        oldplayerinfo=@oldplayerssummery.find{|v| (v["id"]==@Curprofile.user_id)}
+        if oldplayerssummery
+          oldplayerinfo=@oldplayerssummery.find{|v| (v["id"]==@Curprofile.user_id)}
+        end  
+        @Curplayer[8] = (oldplayerinfo==nil) ? nil : oldplayerinfo["suggestscore"] #SuggestScore
+        @Curplayer[9] = (oldplayerinfo==nil) ? nil : oldplayerinfo["adjustscore"] #adjustScore
+        @Curplayer[10] = @Curprofile.curscore #original bgamescore without adjustment
+      else
+        @Curplayer[2]=nil #can't find player by name in the DB
       end  
-      @Curplayer[8] = (oldplayerinfo==nil) ? nil : oldplayerinfo["suggestscore"] #SuggestScore
-      @Curplayer[9] = (oldplayerinfo==nil) ? nil : oldplayerinfo["adjustscore"] #adjustScore
-      @Curplayer[10] = @Curprofile.curscore #original bgamescore without adjustment
-      @CurGamePlayersInfo.push(@Curplayer)		
+        @CurGamePlayersInfo.push(@Curplayer)		
     end 
     @CurGamePlayersInfo		
   end
@@ -371,8 +373,12 @@ class Uploadgame < ActiveRecord::Base
     @newgame.gamename =spreadsheet.title()
     @gameinfows=spreadsheet.worksheets[0] 
     @newgame=GetBasicGameInfofromWs(@newgame, @gameinfows)
+ 
     @CurPlayersInfo=GetPlayersinfo(@gameinfows,@oldplayerssummery)
-    
+
+    @ErrorPlayerlist=@CurPlayersInfo.find_all{|v| v[2]==nil}
+
+    return @ErrorPlayerlist if !@ErrorPlayerlist.empty? #stop upload and report errorplayerlist 
     @Gamerecords= Processgamerocords(spreadsheet.worksheets)
    
     @newgame.detailgameinfo=combine_gamerecords(@Gamerecords)

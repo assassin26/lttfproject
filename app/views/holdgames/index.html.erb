@@ -2,12 +2,18 @@
 
 <div class="row">
   <%= link_to_if(current_user && ((current_user.has_role? :admin) || (current_user.has_role? :superuser) || (current_user.has_role? :gameholder)), '登錄新比賽', new_holdgame_path, :class=> "button radius") %>
-
+  <%= link_to_if(current_user && ((current_user.has_role? :admin) || (current_user.has_role? :superuser) || (current_user.has_role? :gameholder)), '查詢本人登錄之比賽', holdgames_path(:user=>current_user.gameholder), :class=> "button radius") %>
+  <%= link_to_if(current_user && ((current_user.has_role? :admin) || (current_user.has_role? :superuser) || (current_user.has_role? :gameholder)), '查詢所有登錄之比賽', holdgames_path(:all=>'all'), :class=> "button radius") %>
   <div class="col-md-12 col-sm-12 col-md-12 col-lg-12">
 
     <div class="table-responsive datagrid">
       <table class="datatable  table-striped table-condensed" border=1 link=blue>
-        <caption class="text-center" ><strong>桌球愛好者聯盟比賽登錄及報名系統</strong></caption>
+        <% if @allgames %>
+          <caption class="text-center" ><strong>比賽登錄及報名系統(所有賽事)</strong></caption> 
+      
+        <%else%> 
+          <caption class="text-center" ><strong>比賽登錄及報名系統--(<%=current_user.gameholder.name%>登錄之賽事)</strong></caption>
+        <%end%>
         <thead>
           <tr>
             <th>賽事名稱</th>

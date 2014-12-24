@@ -11,7 +11,13 @@ class HoldgamesController < InheritedResources::Base
 
   def index
    
-    @holdgames=Holdgame.includes(:gameholder).where(:lttfgameflag=>true).where("startdate >= ? ", Time.zone.now.to_date-14).page(params[:page]).per(50)
+   if !params[:user]
+      @allgames=true  #show all reg games
+      @holdgames=Holdgame.includes(:gameholder).where(:lttfgameflag=>true).where("startdate >= ? ", Time.zone.now.to_date-14).page(params[:page]).per(50)
+   else
+      @allgames=false  #show all current_usr reg games
+    @holdgames=Holdgame.includes(:gameholder).where(:lttfgameflag=>true,:gameholder_id=>params[:user].to_i).where("startdate >= ? ", Time.zone.now.to_date-14).page(params[:page]).per(50)
+   end
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @holdgames }

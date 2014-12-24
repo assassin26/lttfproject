@@ -94,17 +94,20 @@ class UploadgamesController < ApplicationController
   def uploadfile_fromholdgame
 
     @holdgame=Holdgame.find(params[:format])
-
+    
     #@uploadgame=Uploadgame.upload(holdgame.inputfileurl)
     @uploadgame=Uploadgame.upload(@holdgame)
-    @playerssummery=@uploadgame.getplayersummary
-    #@playerssummery=@NewFoo.uploadplayerinfo
-
-    @gamesrecords=@uploadgame.getdetailgamesrecord
-    #@gamesrecords=@NewFoo.uploadgamesrecord
-
-    Rails.cache.write("curgame", @uploadgame)
-    Rails.cache.write("playersummery",@playerssummery)
+    if @uploadgame.class != Array  #return Arry means found error player 
+      @Playerlisterr=false
+      @Erroplayerlist=[]
+      @playerssummery=@uploadgame.getplayersummary
+      @gamesrecords=@uploadgame.getdetailgamesrecord
+      Rails.cache.write("curgame", @uploadgame)
+      Rails.cache.write("playersummery",@playerssummery)
+    else
+      @Erroplayerlist=@uploadgame
+      @Playerlisterr=true
+    end  
     render :displayuploadfile
   end  
 
