@@ -7,6 +7,7 @@
   <div  id='sidebar_container'> 
     <h4 align="center"><font color="blue">台灣打桌球地圖</font></h4>
     <h6 align="center"><font color="blue">本地圖由<%= link_to '桌球愛好者聯盟', 'https://www.facebook.com/groups/LTTF.TW/' %> 提供，歡迎轉載使用，轉載時請註明出處!</font></h6>
+     <h6 align="center"><font color="blue">本地圖目前共收錄: <%=  @ttcourts.count %>處場地資料 </font></h6>
     <h6 align="center"><font color="blue">累計點閱次數: <%=  @ttcourts_views_record.ttcourts_views %> </font></h6>
 
     <ul class="collapsibleList" id="ttcourtslist">
