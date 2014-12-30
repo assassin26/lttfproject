@@ -38,5 +38,24 @@ class Holdgame < ActiveRecord::Base
     end  
   
   end	
-
+  def find_player_ingroups_type(user_id)
+    playergroups=Array.new
+   
+   
+    self.gamegroups.each do |gamegroup|
+  
+    player_gattendant_id= gamegroup.find_player_in_attendants(user_id)
+ 
+      if player_gattendant_id
+      
+        groups_type=Hash.new
+        groups_type['group']=gamegroup
+        groups_type['type']=gamegroup.find_official_backup_by_attendant_id(player_gattendant_id)
+        playergroups.push(groups_type)
+      end
+      
+    end 
+   
+    return playergroups 
+  end  
 end

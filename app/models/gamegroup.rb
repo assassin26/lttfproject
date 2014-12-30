@@ -61,7 +61,20 @@ class Gamegroup < ActiveRecord::Base
     end 
     false 
   end
-  
+  def check_official_backup(gattend_id)
+    
+     match_index = self.groupattendants.index(self.groupattendants.find { |l| l.id == gattend_id })
+     if match_index <self.noofplayers
+       return '正選'
+     else
+       return '備取'
+     end  
+  end
+  def find_official_backup_by_attendant_id(gattend_id)
+      
+      return self.check_official_backup(gattend_id)
+
+  end
   def totalresgisteredsplayersno
    
     return self.groupattendants.length

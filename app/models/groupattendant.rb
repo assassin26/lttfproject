@@ -15,6 +15,6 @@ class Groupattendant < ActiveRecord::Base
    	  	return true
    	  end	
   end	
-
+  
 
 end

@@ -46,6 +46,21 @@ class PlayerprofilesController < ApplicationController
     session[:player_id] = params[:id]
     @playerprofile = Playerprofile.find(params[:id])
     @futuregames=@playerprofile.user.find_reg_unplay_games
+
+    @showgames=Array.new
+   
+    @futuregames.each do |futuregame|
+      group_type=futuregame.find_player_ingroups_type(@playerprofile.user.id)
+
+      if !group_type.empty?
+        gamegroups=Hash.new
+        gamegroups['groups_type']=group_type
+        gamegroups['holdgame']=futuregame
+        @showgames.push(gamegroups)
+
+      end  
+    end  
+
     data_table = GoogleVisualr::DataTable.new
     data_table.new_column('date', '日期')
     data_table.new_column('number', '積分走勢')
