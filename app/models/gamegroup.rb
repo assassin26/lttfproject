@@ -67,7 +67,7 @@ class Gamegroup < ActiveRecord::Base
      if match_index <self.noofplayers
        return '正選'
      else
-       return '備取'
+       return '候補'
      end  
   end
   def find_official_backup_by_attendant_id(gattend_id)
