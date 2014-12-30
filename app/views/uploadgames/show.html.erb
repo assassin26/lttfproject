@@ -14,14 +14,14 @@
         <tr>
         <th>序號</th>
         <th>會員編號</th>
-        <th>會員姓名</th>
+        <th>姓名</th>
         <th>賽前積分</th>
         <th>前置調整積分</th>
         <th>勝場數</th>
         <th>敗場數</th>
         <th>賽後積分</th>
         <th>積分增減</th>
-        <th>主辦單位建議積分</th>
+        <th>建議積分</th>
         </tr>
       </thead>  
       <tbody>
@@ -29,7 +29,12 @@
           <tr>
           <td><%= player["serial"] %></td>
           <td><%= player["id"] %></td>
-          <td><%= player["name"] %></td>
+          <td style="white-space: nowrap;">
+              <%= link_to playerprofile_path(player["id"].to_i) do %>
+            <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"> <%= player["name"] %></font>
+          <% end %>
+          </td>
+         
           <td><%= player["original bscore"] %></td>
           <% if player["original bscore"]==player["bgamescore"] %>
             <td>----</td>

@@ -20,7 +20,7 @@
         <tr>
         <td><%= image_tag(playerprofile.user.playerphoto_url(:tiny),:class => "dp img-circle img-responsive") %></td>
         <td><%= playerprofile.user_id %></td>
-        <td>
+        <td style="white-space: nowrap;">
           <%= link_to(playerprofile) do %>
             <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"><%= playerprofile.name %></font>
           <% end %>

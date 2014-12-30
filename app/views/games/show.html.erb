@@ -24,7 +24,12 @@
           <tr>
           <td> <%=index+1%> </td>
           <td><%= player["id"] %></td>
-          <td><%= player["name"] %></td>
+          <td style="white-space: nowrap;">
+              <%= link_to playerprofile_path(player["id"].to_i) do %>
+            <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"> <%= player["name"] %></font>
+          <% end %>
+        </td>
+          
           <td><%= player["bgamescore"] %></td>
           <td><%= player["wongames"] %></td>
           <td><%= player["losegames"] %></td>
