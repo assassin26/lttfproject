@@ -384,9 +384,14 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
    
   end
 
-  def wirte_caculatedscore_to_DB
-      
-  end  
+  def show_player_games
+    @uploadgame = Uploadgame.find(params[:format].to_i)
+    @playerssummery=@uploadgame.getplayersummary
+    @playerssummery=@playerssummery.find_all{|v| v['name']==params[:player_name]}
+    @gamesrecords=@uploadgame.getdetailgamesrecord
+    @gamesrecords=@gamesrecords.find_all{|v| v['Aplayer']==params[:player_name]||v['Bplayer']==params[:player_name]}
+    @targetplayername=params[:player_name]
+   end  
 
   def set_adjust_players(playersinfo)
     @adjustplayers = Array.new

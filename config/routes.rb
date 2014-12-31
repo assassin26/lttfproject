@@ -43,6 +43,7 @@ Lttfproject::Application.routes.draw do
       post :trycalculation
       post :caculatescore
       get  :gamescorechecking
+      get  :show_player_games
     end
     member do
       post :calculategamepage
