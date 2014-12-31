@@ -85,16 +85,24 @@
     </thead> 
     <tboody>
       <%  @gamesrecords.each do |game| %>
-        <tr>
-        <p align=center>
-        <td align=left><font color=blue><%= game["group"] %></font></td>
-        <td align=center><font color=blue><%= game["Aplayer"] %></font></td>
-        <td align=center><font color=blue><%= game["gameresult"] %></font></td>
-        <td align=center><font color=blue><%= game["Bplayer"] %></font></td>
-        <td align=left><font color=blue><%= game["detailrecords"] %></font></td>
-        </p>
-        </tr>
-      <% end %> 
+          <tr>
+          <td align=left><font color=blue><%= game["group"] %></font></td>
+          <td align=center><font color=blue><%= game["Aplayer"] %></font>
+              <%if game["Players_scorechanged"] %>
+                <br>
+                <font color='red'>(+<%= game["Players_scorechanged"].to_s %>) </font>
+             <%end%>
+          </td>
+          <td align=center><font color=blue><%= game["gameresult"] %></font></td>
+          <td align=center><font color=blue><%= game["Bplayer"] %></font>
+              <%if game["Players_scorechanged"] %>
+                <br>
+                <font color='red'>(-<%= game["Players_scorechanged"].to_s %>) </font>
+             <%end%>
+          </td>
+          <td align=left><font color=blue><%= game["detailrecords"] %></font></td>
+          </tr>
+        <% end %>
     </tboody>  
   </table> 
 </div>

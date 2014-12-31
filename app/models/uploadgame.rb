@@ -36,31 +36,32 @@ class Uploadgame < ActiveRecord::Base
   
     @CurGamePlayersInfo=Array.new
     (player_info_start_row..player_info_start_row+@NoofPlayers-1).each do |i|
-      @Curplayer=Array.new(9)
-      @Curplayer[0] = gameinfows[i,1] #serial
-      @Curplayer[1] = gameinfows[i,2].strip #name
+      @Curplayer=Hash.new(9)
+      @Curplayer["serial"] = gameinfows[i,1] #serial
+      @Curplayer["name"] = gameinfows[i,2].strip #name
       Rails.logger.info(i.to_s)
-      Rails.logger.info(@Curplayer[0].to_s)
-      Rails.logger.info(@Curplayer[1])
-      Rails.logger.info(@Curplayer[1].length)
-      @Curprofile = Playerprofile.where( :name => @Curplayer[1] ).first
+      Rails.logger.info(@Curplayer["serial"].to_s)
+      Rails.logger.info(@Curplayer["name"])
+    
+      @Curprofile = Playerprofile.where( :name => @Curplayer["name"] ).first
       if @Curprofile
-        @Curplayer[2]= @Curprofile.user_id #id
-        @Curplayer[3] = @Curprofile.curscore #Bscore
-        @Curplayer[3]=@Curprofile.initscore if @Curplayer[3]==nil
-        @Curplayer[4] = 0  #Wongames
-        @Curplayer[5] =0   #LoseGames
-        @Curplayer[6] = 0  #AScore
-        @Curplayer[7] = 0   #Scorechange
+        @Curplayer["id"]= @Curprofile.user_id #id
+        @Curplayer["bgamescore"]= (@Curprofile.curscore==nil) ? @Curprofile.initscore : @Curprofile.curscore
+        #@Curplayer["bgamescore"] = @Curprofile.curscore #Bscore
+        #@Curplayer["bgamescore"]=@Curprofile.initscore if @Curplayer[3]==nil
+        @Curplayer["wongames"] = 0  #Wongames
+        @Curplayer["losegames"] =0   #LoseGames
+        @Curplayer["agamescore"] = 0  #AScore
+        @Curplayer["scorechanged"] = 0   #Scorechange
 
         if oldplayerssummery
           oldplayerinfo=@oldplayerssummery.find{|v| (v["id"]==@Curprofile.user_id)}
         end  
-        @Curplayer[8] = (oldplayerinfo==nil) ? nil : oldplayerinfo["suggestscore"] #SuggestScore
-        @Curplayer[9] = (oldplayerinfo==nil) ? nil : oldplayerinfo["adjustscore"] #adjustScore
-        @Curplayer[10] = @Curprofile.curscore #original bgamescore without adjustment
+        @Curplayer["suggestscore"] = (oldplayerinfo==nil) ? nil : oldplayerinfo["suggestscore"] #SuggestScore
+        @Curplayer["adjustscore"] = (oldplayerinfo==nil) ? nil : oldplayerinfo["adjustscore"] #adjustScore
+        @Curplayer["original bscore"] = @Curprofile.curscore #original bgamescore without adjustment
       else
-        @Curplayer[2]=nil #can't find player by name in the DB
+        @Curplayer["id"]=nil #can't find player by name in the DB
       end  
         @CurGamePlayersInfo.push(@Curplayer)		
     end 
@@ -86,7 +87,7 @@ class Uploadgame < ActiveRecord::Base
   
 
   end
-  def self.Processgamerocords(sheets)
+  def self.old_Processgamerocords(sheets)
     gameinfoheadrow=6
     gameinfoStartcol=13
     soruceGameRecordstartrow=7
@@ -154,6 +155,90 @@ class Uploadgame < ActiveRecord::Base
               @SingleGame[4]=currecord  
 
             end 
+            @CurpageGames.push(@SingleGame)
+          end 
+
+          i += 2
+        end
+      
+      end
+    end
+    @CurpageGames 
+  end
+   def self.Processgamerocords(playersinfo, sheets)
+    gameinfoheadrow=6
+    gameinfoStartcol=13
+    soruceGameRecordstartrow=7
+    surrentgamerecordrow=soruceGameRecordstartrow
+    gameplayercol=3
+    resultcol=4
+    winnercol=5
+    gamerecordsstartcol=6
+    playerNocol=2
+  
+    gamenamecol=gameinfoStartcol
+    playerAcol=gameinfoStartcol+1
+    playerBcol=playerAcol+1
+    targetresultcol=playerBcol+1
+    detailresultcol=targetresultcol+1
+    playerinfostartrow=7
+    @CurpageGames=Array.new
+    regEx=/成績$/
+    sheets.each do |ws|
+   
+      if regEx.match(ws.title)
+         
+        gameListA=Array.new
+        gameListB=Array.new
+        i=7
+      
+        while ( i < ws.num_rows )
+       
+          winnerNo=ws[i,winnercol]
+
+          if (winnerNo!="NA")
+
+            @SingleGame=Hash.new
+            playerAno=ws[i,playerNocol]
+            playerBno=ws[i+1,playerNocol]
+            playerA =ws[i,gameplayercol].strip
+            playerB =ws[i+1,gameplayercol].strip
+            gamepointsA=ws[i,resultcol]
+            gamepointsB=ws[i+1,resultcol]
+            gameListA.clear
+            gameListB.clear
+
+            (0..4).each do |j|
+              gameListA[j] = (ws[i,gamerecordsstartcol+j]=="")? "-" : ws[i,gamerecordsstartcol+j].to_s
+              gameListB[j] = (ws[i+1,gamerecordsstartcol+j]=="")? "-" : ws[i+1,gamerecordsstartcol+j].to_s
+            end 
+            currecord=""
+            if winnerNo==playerAno
+              #currecord= "["+ gameListA[0] + ":" + gameListB[0] + ";" + gameListA[1] + ":" + gameListB[1] + ";" + gameListA[2] + ":" + gameListB[2] + ";" + gameListA[3] + ":" + gameListB[3] + ";"  + gameListA[4] + ":" + gameListB[4]+"]"
+              currecord=  gameListA[0] + ":" + gameListB[0] + ";" + gameListA[1] + ":" + gameListB[1] + ";" + gameListA[2] + ":" + gameListB[2] + ";" + gameListA[3] + ":" + gameListB[3] + ";"  + gameListA[4] + ":" + gameListB[4]
+ 
+              @SingleGame['group']=ws.title #0:group
+              @SingleGame['Aplayer']=playerA #1:Winner
+              @SingleGame['Bplayer']=playerB  #2 :Loser
+              @SingleGame['gameresult']= gamepointsA+":"+ gamepointsB   #3 :Gamepoint 
+              @SingleGame['detailrecords']=currecord                #4 :gamedetail
+
+            else
+              #currecord= "["+ gameListB[0] + ":" + gameListA[0] + ";" + gameListB[1] + ":" + gameListA[1] + ";" + gameListB[2] + ":" + gameListA[2] + ";" + gameListB[3] + ":" + gameListA[3] + ";"  + gameListB[4] + ":" + gameListA[4]+"]"
+              currecord=  gameListB[0] + ":" + gameListA[0] + ";" + gameListB[1] + ":" + gameListA[1] + ";" + gameListB[2] + ":" + gameListA[2] + ";" + gameListB[3] + ":" + gameListA[3] + ";"  + gameListB[4] + ":" + gameListA[4]
+  
+              @SingleGame['group']=ws.title
+              @SingleGame['Aplayer']=playerB
+              @SingleGame['Bplayer']=playerA
+              @SingleGame['gameresult']= gamepointsB+":"+ gamepointsA   
+              @SingleGame['detailrecords']=currecord  
+
+            end 
+
+            aplayer=playersinfo.find{|v| v['name']==@SingleGame['Aplayer']}
+            bplayer=playersinfo.find{|v| v['name']==@SingleGame['Bplayer']}
+
+            @SingleGame['Players_scorechanged']=calculate_score_change( aplayer["bgamescore"].to_i, bplayer["bgamescore"].to_i)
             @CurpageGames.push(@SingleGame)
           end 
 
@@ -232,7 +317,10 @@ class Uploadgame < ActiveRecord::Base
   def self.combine_gamerecords(recordsarray)
     @fullgamerecords=""
 	  recordsarray.each do |record|
-      @fullgamerecords+=record[0]+"|"+record[1]+":"+record[2]+"|"+record[3]+"|"+record[4] 
+      #@fullgamerecords+=record[0]+"|"+record[1]+":"+record[2]+"|"+record[3]+"|"+record[4] 
+      @fullgamerecords+=record['group']+"|"+record['Aplayer']+":"+record['Bplayer']+"|"+record['gameresult']+"|"+
+        record['Players_scorechanged'].to_s + "|"+"["+record['detailrecords']+"]"
+
   	end	
  	  @fullgamerecords
   end
@@ -272,6 +360,7 @@ class Uploadgame < ActiveRecord::Base
     players
   end	
   def self.hash_calculate_score(players, gamerecords)
+
     players.each do |player|
       player["scorechanged"]=0
       player["agamescore"]=0
@@ -279,9 +368,9 @@ class Uploadgame < ActiveRecord::Base
       player["wongames"] += @playerwongames.length
       @playerwongames.each do |wongame|
        
-        opplayer=players.find{|e| e["name"]==wongame["Bplayer"]}
-        player["scorechanged"]+=calculate_score_change( player["bgamescore"].to_i,opplayer["bgamescore"].to_i)
-       
+        #opplayer=players.find{|e| e["name"]==wongame["Bplayer"]}
+        #player["scorechanged"]+=calculate_score_change( player["bgamescore"].to_i,opplayer["bgamescore"].to_i)
+        player["scorechanged"]+=wongame['Players_scorechanged'].to_i
    
        end 
       @playerlosegames=gamerecords.find_all{|v| v["Bplayer"]==player["name"]}
@@ -289,9 +378,9 @@ class Uploadgame < ActiveRecord::Base
 
       @playerlosegames.each do |losegame|
       
-        opplayer=players.find{|e| e["name"]==losegame["Aplayer"]}
-        player["scorechanged"]-=calculate_score_change( opplayer["bgamescore"].to_i,player["bgamescore"].to_i)
-          
+        #opplayer=players.find{|e| e["name"]==losegame["Aplayer"]}
+        #player["scorechanged"]-=calculate_score_change( opplayer["bgamescore"].to_i,player["bgamescore"].to_i)
+       player["scorechanged"]-=losegame['Players_scorechanged'].to_i   
       end
       
       player["agamescore"]=player["bgamescore"].to_i+ player["scorechanged"].to_i
@@ -333,17 +422,41 @@ class Uploadgame < ActiveRecord::Base
     detailgamesrecord.each do |singlegamerecord|
     
       singlegame=singlegamerecord.split("|")
-      gamesarray=Hash.new
-      gamesarray["group"]=singlegame[0]
-      players=singlegame[1].split(":")
-      gamesarray["Aplayer"]=players[0]
-      gamesarray["Bplayer"]=players[1]
-      gamesarray["gameresult"]=singlegame[2]
-      dummy,gamesarray["detailrecords"] = singlegame[3].split("[")
-      gamesrecords.push(gamesarray)
+      if singlegame.count==4 #old format
+        gamesarray=Hash.new
+        gamesarray["group"]=singlegame[0]
+        players=singlegame[1].split(":")
+        gamesarray["Aplayer"]=players[0]
+        gamesarray["Bplayer"]=players[1]
+        gamesarray["gameresult"]=singlegame[2]
+        dummy,gamesarray["detailrecords"] = singlegame[3].split("[")
+        gamesrecords.push(gamesarray)
+      else  #new format count==5
+          gamesarray=Hash.new
+          gamesarray["group"]=singlegame[0]
+          players=singlegame[1].split(":")
+          gamesarray["Aplayer"]=players[0]
+          gamesarray["Bplayer"]=players[1]
+          gamesarray["gameresult"]=singlegame[2]
+          gamesarray["Players_scorechanged"]=singlegame[3].to_i
+          dummy,gamesarray["detailrecords"] = singlegame[4].split("[")
+          gamesrecords.push(gamesarray)
+      end  
     end
     gamesrecords
   end  
+  def self.gamesrecords_with_scorechanged(playersinfo, gamesrecords)
+    new_gamesrecords=Array.new
+   
+    gamesrecords.each do |singlegamerecord|
+      aplayer=playersinfo.find{|v| v['name']==singlegamerecord['Aplayer']}
+      bplayer=playersinfo.find{|v| v['name']==singlegamerecord['Bplayer']}
+      score_change=calculate_score_change(  aplayer["bgamescore"].to_i, bplayer["bgamescore"].to_i)
+      singlegamerecord['Players_scorechanged']=score_change
+      new_gamesrecords.push(singlegamerecord)
+    end 
+    return new_gamesrecords
+  end
   def self.upload(holdgame)
    client = Google::APIClient.new(
          :application_name => 'lttfprojecttest',
@@ -376,31 +489,30 @@ class Uploadgame < ActiveRecord::Base
  
     @CurPlayersInfo=GetPlayersinfo(@gameinfows,@oldplayerssummery)
 
-    @ErrorPlayerlist=@CurPlayersInfo.find_all{|v| v[2]==nil}
+    @ErrorPlayerlist=@CurPlayersInfo.find_all{|v| v["id"]==nil}
 
     return @ErrorPlayerlist if !@ErrorPlayerlist.empty? #stop upload and report errorplayerlist 
-    @Gamerecords= Processgamerocords(spreadsheet.worksheets)
+    @Gamerecords= Processgamerocords( @CurPlayersInfo, spreadsheet.worksheets)
+    #@gamesrecord_with_scorechanged=gamesrecords_with_scorechanged(@CurPlayersInfo,@Gamerecords)
    
     @newgame.detailgameinfo=combine_gamerecords(@Gamerecords)
-    @CurPlayersInfo=calculate_score(@CurPlayersInfo , @Gamerecords)
-    
+    #@CurPlayersInfo=calculate_score(@CurPlayersInfo , @Gamerecords)
+    @CurPlayersInfo=hash_calculate_score(@CurPlayersInfo , @Gamerecords)
     curlines=""
     
     @CurPlayersInfo.each do |player|
-      
-  
-      curlines=curlines+ "\n" if curlines!="" 	
-      curlines=curlines+"_"+player[0].to_s 
-      curlines=curlines+"_"+player[2].to_s
-      curlines=curlines+"_"+player[1]
-      curlines=curlines+"_"+player[3].to_s
-      curlines=curlines+"_"+player[4].to_s
-      curlines=curlines+"_"+player[5].to_s
-      curlines=curlines+"_"+player[6].to_s
-      curlines=curlines+"_"+player[7].to_s
-      curlines=curlines+"_"+player[8].to_s
-      curlines=curlines+"_"+player[9].to_s
-      curlines=curlines+"_"+player[10].to_s
+      curlines=curlines+ "\n" if curlines!=""   
+      curlines=curlines+"_"+player["serial"].to_s 
+      curlines=curlines+"_"+player["id"].to_s
+      curlines=curlines+"_"+player["name"].to_s
+      curlines=curlines+"_"+player["bgamescore"].to_s
+      curlines=curlines+"_"+player["wongames"].to_s
+      curlines=curlines+"_"+player["losegames"].to_s
+      curlines=curlines+"_"+player["agamescore"].to_s
+      curlines=curlines+"_"+player["scorechanged"].to_s
+      curlines=curlines+"_"+player["suggestscore"].to_s
+      curlines=curlines+"_"+player["adjustscore"].to_s
+      curlines=curlines+"_"+player["original bscore"].to_s
     end
     @newgame.players_result= curlines
     @newgame.scorecaculated=false 

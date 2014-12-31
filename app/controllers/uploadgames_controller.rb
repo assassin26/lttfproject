@@ -97,7 +97,7 @@ class UploadgamesController < ApplicationController
     
     #@uploadgame=Uploadgame.upload(holdgame.inputfileurl)
     @uploadgame=Uploadgame.upload(@holdgame)
-    if @uploadgame.class != Array  #return Arry means found error player 
+    if @uploadgame.class != Hash  #return Arry means found error player 
       @Playerlisterr=false
       @Erroplayerlist=[]
       @playerssummery=@uploadgame.getplayersummary
@@ -233,7 +233,7 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
           end
           @player.save 
           @playerscore=player 
-          UserMailer.adjustscore_publish_notice(@player,@playerscore,@uploadgame).deliver
+          #UserMailer.adjustscore_publish_notice(@player,@playerscore,@uploadgame).deliver
         end
       end
     end
@@ -285,13 +285,13 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
 
           @player.save
           @playerscore=player
-          UserMailer.newscore_publish_notice(@player,@playerscore,@uploadgame.gamename).deliver
+          #UserMailer.newscore_publish_notice(@player,@playerscore,@uploadgame.gamename).deliver
         end
       end
     end
      @newgame.players_result=curlines  
      @newgame.save
-     UserMailer.newscore_publish_notice_to_FB( @newgame).deliver  
+     #UserMailer.newscore_publish_notice_to_FB( @newgame).deliver  
   end  
    def publish_trycalculation
    # @uploadgame = Uploadgame.find(params[:game_id])
@@ -308,7 +308,9 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
     end  
 
     @adjustplayers=set_adjust_players(@adjustplayers)
-    @adjustplayers=Uploadgame.hash_calculate_score(@adjustplayers, @gamesrecords)
+    @updategamesrecords=Uploadgame.gamesrecords_with_scorechanged(@adjustplayers, @gamesrecords)
+    @uploadgame.detailgameinfo=Uploadgame.combine_gamerecords(@updategamesrecords)
+    @adjustplayers=Uploadgame.hash_calculate_score(@adjustplayers, @updategamesrecords)
     #@zeroscoreplayers= @adjustplayers.find_all{|v| v["bgamescore"].to_i==0 ||v["bgamescore"]=="" }
     @zeroscoreplayers= @adjustplayers.find_all{|v| (v["bgamescore"].to_i==0 ||v["bgamescore"]=="") && (v["adjustscore"]==nil ||v["adjustscore"]=="") && !(v["wongames"]==0 && v["losegames"]==0)}
     flash[:notice]="積分試算完成!"
@@ -326,7 +328,7 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
         @uploadgame.updatePlayerResultFromadjustPlayersinfo(@adjustplayers)
         @uploadgame.publishedforchecking = true
         @uploadgame.save
-        send_publish_notice_to_players(@uploadgame)
+        #send_publish_notice_to_players(@uploadgame)
         @uploadgames = Uploadgame.waitingforprocess.page(params[:page]).per(10)
         flash[:success]="本賽事公告作業完成!"
     
@@ -349,7 +351,9 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
         
     end  
     @adjustplayers=set_adjust_players(@adjustplayers)
-    @adjustplayers=Uploadgame.hash_calculate_score(@adjustplayers, @gamesrecords)
+    @updategamesrecords=Uploadgame.gamesrecords_with_scorechanged(@adjustplayers, @gamesrecords)
+    @uploadgame.detailgameinfo=Uploadgame.combine_gamerecords(@updategamesrecords)
+    @adjustplayers=Uploadgame.hash_calculate_score(@adjustplayers, @updategamesrecords)
     #@zeroscoreplayers= @adjustplayers.find_all{|v| v["bgamescore"].to_i==0 ||v["bgamescore"]=="" }
     @zeroscoreplayers= @adjustplayers.find_all{|v| (v["bgamescore"].to_i==0 ||v["bgamescore"]=="") && (v["adjustscore"]==nil ||v["adjustscore"]=="") && !(v["wongames"]==0 && v["losegames"]==0)}
     flash[:notice]="積分試算完成!"
@@ -357,6 +361,7 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
     Rails.cache.write("adjustplayers",@adjustplayers)
     Rails.cache.write("curgame", @uploadgame)
     Rails.cache.write("playersummery",@playerssummery)
+    Rails.cache.write("gamesrecords",@updategamesrecords)
    if params[:save_option_a]
 
        render :calculategamepage 
@@ -414,12 +419,14 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
      @playerssummery=@uploadgame.getplayersummary
      @gamesrecords=@uploadgame.getdetailgamesrecord
      @adjustplayers=set_adjust_players(@playerssummery)
-     @adjustplayers=Uploadgame.hash_calculate_score(@adjustplayers, @gamesrecords)
+     @updategamesrecords=Uploadgame.gamesrecords_with_scorechanged(@adjustplayers, @gamesrecords)
+     @uploadgame.detailgameinfo=Uploadgame.combine_gamerecords(@updategamesrecords)
+     @adjustplayers=Uploadgame.hash_calculate_score(@adjustplayers, @updategamesrecords)
      @zeroscoreplayers= @adjustplayers.find_all{|v| (v["bgamescore"].to_i==0 ||v["bgamescore"]=="") && (v["adjustscore"]==nil ||v["adjustscore"]=="") && !(v["wongames"]==0 && v["losegames"]==0)}
      flash[:alert]="尚有0積分球友，需賦予調整積分才可進行積分更新作業!"  if  @zeroscoreplayers!=[]
      Rails.cache.write("curgame", @uploadgame)
      Rails.cache.write("playersummery",@playerssummery)
-     Rails.cache.write("gamesrecords",@gamesrecords)
+     Rails.cache.write("gamesrecords",@updategamesrecords)
      Rails.cache.write("adjustplayers",@adjustplayers)
   end   
   # GET /uploadgames/new

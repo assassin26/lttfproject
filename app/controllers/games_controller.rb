@@ -41,14 +41,29 @@ class GamesController < ApplicationController
      
       @detailgamesrecord.each do |singlegamerecord|
         @singlegame=singlegamerecord.split("|")
-        @gamesarray=Hash.new
-        @gamesarray["group"]=@singlegame[0]
-        @players=@singlegame[1].split(":")
-        @gamesarray["Aplayer"]=@players[0]
-        @gamesarray["Bplayer"]=@players[1]
-        @gamesarray["gameresult"]=@singlegame[2]
-        @dummy,@gamesarray["detailrecords"] = @singlegame[3].split("[")
-        @gamesrecords.push(@gamesarray)
+        if @singlegame.count==4 #old format
+          @gamesarray=Hash.new
+          @gamesarray["group"]=@singlegame[0]
+          @players=@singlegame[1].split(":")
+          @gamesarray["Aplayer"]=@players[0]
+          @gamesarray["Bplayer"]=@players[1]
+          @gamesarray["gameresult"]=@singlegame[2]
+          @dummy,@gamesarray["detailrecords"] = @singlegame[3].split("[")
+          @gamesarray["Players_scorechanged"]=nil
+          @gamesrecords.push(@gamesarray)
+        else     #new format count==5
+          @gamesarray=Hash.new
+          @gamesarray["group"]=@singlegame[0]
+          @players=@singlegame[1].split(":")
+          @gamesarray["Aplayer"]=@players[0]
+          @gamesarray["Bplayer"]=@players[1]
+          @gamesarray["gameresult"]=@singlegame[2]
+          @gamesarray["Players_scorechanged"]=@singlegame[3].to_i
+          @dummy,@gamesarray["detailrecords"] = @singlegame[4].split("[")
+          @gamesrecords.push(@gamesarray)
+         
+        end  
+          
       end
     end  
     respond_to do |format|
