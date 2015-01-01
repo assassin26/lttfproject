@@ -28,7 +28,10 @@
           <tr>  
           <td> <%= player["serial"] %></td>
           <td>  <%= player["id"] %></td>
-          <td><%= player["name"] %></td>
+          <td style="white-space: nowrap;">
+            <%= player["name"] %>
+          </td>
+   
           <td><%= player["bgamescore"] %></td>
           <td><%= player["wongames"] %></td>
           <td><%= player["losegames"] %></td>
@@ -69,18 +72,29 @@
         <%  @gamesrecords.each do |game| %>
           <tr>
           <td align=left><font color=blue><%= game["group"] %></font></td>
-          <td align=center><font color=blue><%= game["Aplayer"] %></font>
+          <td align=center>
+             <%= game["Aplayer"] %> 
+                             
+            <br> 
+            <font color='red'>
+              <%= game["Aplayer bgamescore"] %>
               <%if game["Players_scorechanged"] %>
-                <br>
-                <font color='red'>(+<%= game["Players_scorechanged"].to_s %>) </font>
-             <%end%>
+                :(+<%= game["Players_scorechanged"].to_s %>) </font>
+              <%end%>
+            </font>
           </td>
           <td align=center><font color=blue><%= game["gameresult"] %></font></td>
-          <td align=center><font color=blue><%= game["Bplayer"] %></font>
+          <td align=center>
+             <%= game["Bplayer"] %> 
+                            
+            <br> 
+            <font color='red'>
+              <%= game["Bplayer bgamescore"] %>
               <%if game["Players_scorechanged"] %>
-                <br>
-                <font color='red'>(-<%= game["Players_scorechanged"].to_s %>) </font>
-             <%end%>
+                :(-<%= game["Players_scorechanged"].to_s %>) 
+              <%end%>
+            </font>
+            
           </td>
           <td align=left><font color=blue><%= game["detailrecords"] %></font></td>
           </tr>

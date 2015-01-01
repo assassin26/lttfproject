@@ -30,7 +30,12 @@
             
           <td> <%= player["serial"] %></font></td>
           <td>  <%= player["id"] %></font></td>
-          <td><%= player["name"] %></font></td>
+          <td style="white-space: nowrap;">
+             <%= link_to cal_show_player_games_uploadgames_path(@uploadgame,:player_name=>player["name"]) do %>
+              <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"> <%= player["name"] %></font>
+          <% end %>
+          </td>
+   
           <% if player["original bscore"]==0 && (!player["adjustscore"] || player["adjustscore"].to_i==0)  %>
             <td class="zero" align="center"><%= player["original bscore"] %></td>
             <td class="zero" align="right"> <%= number_field_tag  "adjustscores[]" , player["adjustscore"] %></td>
@@ -84,25 +89,40 @@
       </tr>
     </thead> 
     <tboody>
-      <%  @gamesrecords.each do |game| %>
+        <%  @gamesrecords.each do |game| %>
           <tr>
           <td align=left><font color=blue><%= game["group"] %></font></td>
-          <td align=center><font color=blue><%= game["Aplayer"] %></font>
+          <td align=center>
+            <%= link_to cal_show_player_games_uploadgames_path(@uploadgame,:player_name=>game["Aplayer"]) do %>
+              <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"> <%= game["Aplayer"] %> </font>
+            <% end %>
+                  
+            <br> 
+            <font color='red'>
+              <%= game["Aplayer bgamescore"] %>
               <%if game["Players_scorechanged"] %>
-                <br>
-                <font color='red'>(+<%= game["Players_scorechanged"].to_s %>) </font>
-             <%end%>
+                :(+<%= game["Players_scorechanged"].to_s %>) </font>
+              <%end%>
+            </font>
           </td>
           <td align=center><font color=blue><%= game["gameresult"] %></font></td>
-          <td align=center><font color=blue><%= game["Bplayer"] %></font>
+          <td align=center>
+            <%= link_to cal_show_player_games_uploadgames_path(@uploadgame,:player_name=>game["Blayer"]) do %>
+                       <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"> <%= game["Bplayer"] %> </font>
+            <% end %>
+                 
+            <br> 
+            <font color='red'>
+              <%= game["Bplayer bgamescore"] %>
               <%if game["Players_scorechanged"] %>
-                <br>
-                <font color='red'>(-<%= game["Players_scorechanged"].to_s %>) </font>
-             <%end%>
+                :(-<%= game["Players_scorechanged"].to_s %>) 
+              <%end%>
+            </font>
+            
           </td>
           <td align=left><font color=blue><%= game["detailrecords"] %></font></td>
           </tr>
-        <% end %>
+        <% end %>        
     </tboody>  
   </table> 
 </div>
