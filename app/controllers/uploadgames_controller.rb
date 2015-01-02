@@ -1,5 +1,6 @@
 # encoding: UTF-8”
 class UploadgamesController < ApplicationController
+  respond_to :js, :html
   before_filter :authenticate_user! ,:except=>[:gamescorechecking, :show]
    # GET /uploadgames
   # GET /uploadgames.json
@@ -193,13 +194,6 @@ class UploadgamesController < ApplicationController
      Rails.cache.write("playersummery",@playerssummery)
      Rails.cache.write("gamesrecords",@gamesrecords)
      Rails.cache.write("adjustplayers",@adjustplayers)
-
-    #@uploadgame.publishedforchecking = true
-    #@uploadgame.save
-    #send_publish_notice_to_players(@uploadgame)
-   
-    #@uploadgames = Uploadgame.waitingforprocess.page(params[:page]).per(10)
-    #flash[:success]="本賽事公告作業完成!"
         
   end
 def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
@@ -233,7 +227,7 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
           end
           @player.save 
           @playerscore=player 
-          #UserMailer.adjustscore_publish_notice(@player,@playerscore,@uploadgame).deliver
+          UserMailer.adjustscore_publish_notice(@player,@playerscore,@uploadgame).deliver
         end
       end
     end
@@ -285,13 +279,13 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
 
           @player.save
           @playerscore=player
-          #UserMailer.newscore_publish_notice(@player,@playerscore,@uploadgame.gamename).deliver
+          UserMailer.newscore_publish_notice(@player,@playerscore,@uploadgame.gamename).deliver
         end
       end
     end
      @newgame.players_result=curlines  
      @newgame.save
-     #UserMailer.newscore_publish_notice_to_FB( @newgame).deliver  
+     UserMailer.newscore_publish_notice_to_FB( @newgame).deliver  
   end  
    def publish_trycalculation
    # @uploadgame = Uploadgame.find(params[:game_id])
@@ -328,7 +322,7 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
         @uploadgame.updatePlayerResultFromadjustPlayersinfo(@adjustplayers)
         @uploadgame.publishedforchecking = true
         @uploadgame.save
-        #send_publish_notice_to_players(@uploadgame)
+        send_publish_notice_to_players(@uploadgame)
         @uploadgames = Uploadgame.waitingforprocess.page(params[:page]).per(10)
         flash[:success]="本賽事公告作業完成!"
     
@@ -383,7 +377,15 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
     end
    
   end
-
+  def displayupload_show_player_games
+    @uploadgame=Rails.cache.read("curgame")
+    #@playerssummery=Rails.cache.read("playersummery")
+    @playerssummery=@uploadgame.getplayersummary
+    @playerssummery=@playerssummery.find_all{|v| v['name']==params[:player_name]}
+    @gamesrecords=@uploadgame.getdetailgamesrecord
+    @gamesrecords=@gamesrecords.find_all{|v| v['Aplayer']==params[:player_name]||v['Bplayer']==params[:player_name]}
+    @targetplayername=params[:player_name]
+  end  
   def show_player_games
     @uploadgame = Uploadgame.find(params[:format].to_i)
     @playerssummery=@uploadgame.getplayersummary
@@ -391,8 +393,33 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
     @gamesrecords=@uploadgame.getdetailgamesrecord
     @gamesrecords=@gamesrecords.find_all{|v| v['Aplayer']==params[:player_name]||v['Bplayer']==params[:player_name]}
     @targetplayername=params[:player_name]
-   end  
-
+  end  
+  def cal_show_player_games
+   @uploadgame=Rails.cache.read("curgame")
+    @playerssummery=Rails.cache.read("playersummery")
+    @gamesrecords=Rails.cache.read("gamesrecords")
+    @adjustplayers=Rails.cache.read("adjustplayers")
+    @gamesrecords=Uploadgame.gamesrecords_with_scorechanged(@adjustplayers, @gamesrecords)
+    
+    @playerssummery=@adjustplayers.find_all{|v| v['name']==params[:player_name]}
+    #@gamesrecords=@uploadgame.getdetailgamesrecord
+    @gamesrecords=@gamesrecords.find_all{|v| v['Aplayer']==params[:player_name]||v['Bplayer']==params[:player_name]}
+    @targetplayername=params[:player_name]
+  end 
+  def publish_show_player_games
+    @uploadgame=Rails.cache.read("curgame")
+    @playerssummery=Rails.cache.read("playersummery")
+    @gamesrecords=Rails.cache.read("gamesrecords")
+    @adjustplayers=Rails.cache.read("adjustplayers")
+    #@uploadgame = Uploadgame.find(params[:format].to_i)
+    #@playerssummery=@uploadgame.getplayersummary
+    @gamesrecords=Uploadgame.gamesrecords_with_scorechanged(@adjustplayers, @gamesrecords)
+    
+    @playerssummery=@adjustplayers.find_all{|v| v['name']==params[:player_name]}
+    #@gamesrecords=@uploadgame.getdetailgamesrecord
+    @gamesrecords=@gamesrecords.find_all{|v| v['Aplayer']==params[:player_name]||v['Bplayer']==params[:player_name]}
+    @targetplayername=params[:player_name]
+  end 
   def set_adjust_players(playersinfo)
     @adjustplayers = Array.new
     playersinfo.each do |player|
@@ -419,7 +446,6 @@ def updategamescore_to_main_table (uploadgame, inp_adjustplayers)
   end  
 
   def calculategamepage
-    
      @uploadgame = Uploadgame.find(params[:game_id])
      @playerssummery=@uploadgame.getplayersummary
      @gamesrecords=@uploadgame.getdetailgamesrecord

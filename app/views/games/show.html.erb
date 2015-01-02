@@ -1,6 +1,5 @@
 
-  <p align=center><%= link_to '返回前頁', :back %></p>
- 
+  <p align=center><%= link_to '返回前頁', :back %>
 
 
   <div class="table-responsive datagrid">
@@ -25,9 +24,10 @@
           <td> <%=index+1%> </td>
           <td><%= player["id"] %></td>
           <td style="white-space: nowrap;">
-              <%= link_to playerprofile_path(player["id"].to_i) do %>
+            <%= link_to  show_player_games_games_path(@game,:player_name=>player["name"]) do %>
             <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"> <%= player["name"] %></font>
           <% end %>
+
         </td>
           
           <td><%= player["bgamescore"] %></td>
@@ -60,29 +60,27 @@
         <%  @gamesrecords.each do |game| %>
           <tr>
           <td align=left><font color=blue><%= game["group"] %></font></td>
-            <% if game["Aplayer"]==@targetplayername %>
-              <td align=center bgcolor=yellow>
-                    <%= link_to show_player_games_games_path(@game,:player_name=>game["Aplayer"]) do %>
+          <% if game["Aplayer"]==@targetplayername %>
+            <td align=center bgcolor=yellow>
+                <%= link_to show_player_games_games_path(@game,:player_name=>game["Aplayer"]) do %>
                        <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"> <%= game["Aplayer"] %> </font>
-                   <% end %>
-                  <!%= game["Aplayer"] %>
+                <% end %>
                 
-                <%if game["Players_scorechanged"] %>
-                  <br>
-                 <font color='red'>(+<%= game["Players_scorechanged"].to_s %>) </font>
-                <%end%>
-              </td>  
-            <%else%>
+          <%else%>
              <td align=center>
-               <%= link_to show_player_games_games_path(@game,:player_name=>game["Aplayer"]) do %>
+              <%= link_to show_player_games_games_path(@game,:player_name=>game["Aplayer"]) do %>
                        <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"> <%= game["Aplayer"] %> </font>
-                   <% end %>
-                <%if game["Players_scorechanged"] %>
+              <% end %>
+          <% end %>
+            <% if game["Aplayer bgamescore"] %>
                    <br>
-                <font color='red'>(+<%= game["Players_scorechanged"].to_s %>) </font>
-                <%end%>
-              </td>
-            <%end%>  
+                   <font color='red'><%= game["Aplayer bgamescore"] %></font>
+            <% end %> 
+            <%if game["Players_scorechanged"] %>
+              <font color='red'>:(+<%= game["Players_scorechanged"].to_s %>) </font>
+            <%end%>
+            </td>
+          
 
 
           <td align=center><font color=blue><%= game["gameresult"] %></font></td>
@@ -97,11 +95,13 @@
                 <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"> <%= game["Bplayer"] %> </font>
               <% end %>
           <%end%> 
-
-              <%if game["Players_scorechanged"] %>
-                <br>
-                <font color='red'>(-<%= game["Players_scorechanged"].to_s %>) </font>
-             <%end%>
+            <% if game["Bplayer bgamescore"] %>
+                   <br>
+                   <font color='red'><%= game["Bplayer bgamescore"] %></font>
+            <% end %> 
+            <%if game["Players_scorechanged"] %>
+              <font color='red'>:(-<%= game["Players_scorechanged"].to_s %>) </font>
+            <%end%>
           </td>
           <td align=left><font color=blue><%= game["detailrecords"] %></font></td>
           </tr>
@@ -112,12 +112,3 @@
   </div>
       
          
- 
-
-
-
-
-
-
-
-

@@ -10,62 +10,22 @@ class GamesController < ApplicationController
       format.json { render json: @games }
     end
   end
-
+  def show_player_games
+    @game = Game.find(params[:format].to_i)
+    @playerssummery=@game.getplayersummary
+    @playerssummery=@playerssummery.find_all{|v| v['name']==params[:player_name]}
+    @gamesrecords=@game.getdetailgamesrecord
+    @gamesrecords=@gamesrecords.find_all{|v| v['Aplayer']==params[:player_name]||v['Bplayer']==params[:player_name]}
+    @targetplayername=params[:player_name]
+   end  
   # GET /games/1
   # GET /games/1.json
   def show
 
     @game = Game.find(params[:id])
+    @playerssummery=@game.getplayersummary
+    @gamesrecords=@game.getdetailgamesrecord
 
-    @currentgamesummery=@game.players_result.split(/\n/)
-    @playerssummery=Array.new
-
-    @currentgamesummery.each do |playersummery|
-      @players=Hash.new
-      @dummy,@players["id"], @players["name"],@players["bgamescore"],@players["wongames"],@players["losegames"],@players["agamescore"],
-                @players["scorechanged"]= playersummery.split("_")
-      
-      #@players["name"]=@playergameinfo[2]
-      #@players["bgamescore"]=@playergameinfo[3]
-      #@players["wongames"]=@playergameinfo[4]
-      #@players["losegames"]=@playergameinfo[5]
-      #@players["agamescore"]=@playergameinfo[6]
-      #@players["scorechenged"]=@playergameinfo[7]
-      @playerssummery.push(@players)
-    end  
-
-    @gamesrecords=Array.new
-    @GameRawinfo=@game.detailgameinfo
-    if(@GameRawinfo)
-      @detailgamesrecord= @GameRawinfo.split("]")
-     
-      @detailgamesrecord.each do |singlegamerecord|
-        @singlegame=singlegamerecord.split("|")
-        if @singlegame.count==4 #old format
-          @gamesarray=Hash.new
-          @gamesarray["group"]=@singlegame[0]
-          @players=@singlegame[1].split(":")
-          @gamesarray["Aplayer"]=@players[0]
-          @gamesarray["Bplayer"]=@players[1]
-          @gamesarray["gameresult"]=@singlegame[2]
-          @dummy,@gamesarray["detailrecords"] = @singlegame[3].split("[")
-          @gamesarray["Players_scorechanged"]=nil
-          @gamesrecords.push(@gamesarray)
-        else     #new format count==5
-          @gamesarray=Hash.new
-          @gamesarray["group"]=@singlegame[0]
-          @players=@singlegame[1].split(":")
-          @gamesarray["Aplayer"]=@players[0]
-          @gamesarray["Bplayer"]=@players[1]
-          @gamesarray["gameresult"]=@singlegame[2]
-          @gamesarray["Players_scorechanged"]=@singlegame[3].to_i
-          @dummy,@gamesarray["detailrecords"] = @singlegame[4].split("[")
-          @gamesrecords.push(@gamesarray)
-         
-        end  
-          
-      end
-    end  
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @game }

@@ -237,7 +237,8 @@ class Uploadgame < ActiveRecord::Base
 
             aplayer=playersinfo.find{|v| v['name']==@SingleGame['Aplayer']}
             bplayer=playersinfo.find{|v| v['name']==@SingleGame['Bplayer']}
-
+            @SingleGame['Aplayer bgamescore']=(aplayer["adjustscore"]==nil || aplayer["adjustscore"].to_i==0 ) ? aplayer["bgamescore"].to_i : aplayer["adjustscore"].to_i
+            @SingleGame['Bplayer bgamescore']=(bplayer["adjustscore"]==nil || bplayer["adjustscore"].to_i==0 ) ? bplayer["bgamescore"].to_i : bplayer["adjustscore"].to_i
             @SingleGame['Players_scorechanged']=calculate_score_change( aplayer["bgamescore"].to_i, bplayer["bgamescore"].to_i)
             @CurpageGames.push(@SingleGame)
           end 
@@ -317,9 +318,9 @@ class Uploadgame < ActiveRecord::Base
   def self.combine_gamerecords(recordsarray)
     @fullgamerecords=""
 	  recordsarray.each do |record|
-      #@fullgamerecords+=record[0]+"|"+record[1]+":"+record[2]+"|"+record[3]+"|"+record[4] 
+        #@fullgamerecords+=record[0]+"|"+record[1]+":"+record[2]+"|"+record[3]+"|"+record[4] 
       @fullgamerecords+=record['group']+"|"+record['Aplayer']+":"+record['Bplayer']+"|"+record['gameresult']+"|"+
-        record['Players_scorechanged'].to_s + "|"+"["+record['detailrecords']+"]"
+        record['Aplayer bgamescore'].to_s+"|"+record['Bplayer bgamescore'].to_s+"|" +record['Players_scorechanged'].to_s + "|"+"["+record['detailrecords']+"]"
 
   	end	
  	  @fullgamerecords
@@ -438,8 +439,10 @@ class Uploadgame < ActiveRecord::Base
           gamesarray["Aplayer"]=players[0]
           gamesarray["Bplayer"]=players[1]
           gamesarray["gameresult"]=singlegame[2]
-          gamesarray["Players_scorechanged"]=singlegame[3].to_i
-          dummy,gamesarray["detailrecords"] = singlegame[4].split("[")
+          gamesarray["Aplayer bgamescore"]=singlegame[3].to_i
+          gamesarray["Bplayer bgamescore"]=singlegame[4].to_i
+          gamesarray["Players_scorechanged"]=singlegame[5].to_i
+          dummy,gamesarray["detailrecords"] = singlegame[6].split("[")
           gamesrecords.push(gamesarray)
       end  
     end
@@ -451,6 +454,8 @@ class Uploadgame < ActiveRecord::Base
     gamesrecords.each do |singlegamerecord|
       aplayer=playersinfo.find{|v| v['name']==singlegamerecord['Aplayer']}
       bplayer=playersinfo.find{|v| v['name']==singlegamerecord['Bplayer']}
+      singlegamerecord['Aplayer bgamescore']=(aplayer["adjustscore"]==nil || aplayer["adjustscore"].to_i==0 ) ? aplayer["bgamescore"].to_i : aplayer["adjustscore"].to_i
+      singlegamerecord['Bplayer bgamescore']=(bplayer["adjustscore"]==nil || bplayer["adjustscore"].to_i==0 ) ? bplayer["bgamescore"].to_i : bplayer["adjustscore"].to_i
       score_change=calculate_score_change(  aplayer["bgamescore"].to_i, bplayer["bgamescore"].to_i)
       singlegamerecord['Players_scorechanged']=score_change
       new_gamesrecords.push(singlegamerecord)

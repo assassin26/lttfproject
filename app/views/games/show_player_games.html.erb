@@ -24,8 +24,8 @@
           <tr>
           <td><%= player["id"] %></td>
           <td style="white-space: nowrap;">
-              <%= link_to playerprofile_path(player["id"].to_i) do %>
-              <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"> <%= player["name"] %></font>
+            <%= link_to  show_player_games_games_path(@game,:player_name=>player["name"]) do %>
+            <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"> <%= player["name"] %></font>
           <% end %>
           </td>
          
@@ -66,24 +66,22 @@
                     <%= link_to show_player_games_games_path(@game,:player_name=>game["Aplayer"]) do %>
                        <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"> <%= game["Aplayer"] %> </font>
                    <% end %>
-                  <!%= game["Aplayer"] %>
-                
-                <%if game["Players_scorechanged"] %>
-                  <br>
-                 <font color='red'>(+<%= game["Players_scorechanged"].to_s %>) </font>
-                <%end%>
-              </td>  
+           
             <%else%>
-             <td align=center>
-               <%= link_to show_player_games_games_path(@game,:player_name=>game["Aplayer"]) do %>
+              <td align=center>
+                <%= link_to show_player_games_games_path(@game,:player_name=>game["Aplayer"]) do %>
                        <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"> <%= game["Aplayer"] %> </font>
-                   <% end %>
-                <%if game["Players_scorechanged"] %>
+                <% end %>
+            <%end%>    
+              <% if game["Aplayer bgamescore"] %>
                    <br>
-                <font color='red'>(+<%= game["Players_scorechanged"].to_s %>) </font>
-                <%end%>
+                   <font color='red'><%= game["Aplayer bgamescore"] %></font>
+              <% end %> 
+              <%if game["Players_scorechanged"] %>
+                  <font color='red'>:(+<%= game["Players_scorechanged"].to_s %>) </font>
+              <%end%>
               </td>
-            <%end%>  
+ 
 
 
           <td align=center><font color=blue><%= game["gameresult"] %></font></td>
@@ -98,10 +96,12 @@
                 <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"> <%= game["Bplayer"] %> </font>
               <% end %>
           <%end%> 
-
+              <% if game["Bplayer bgamescore"] %>
+                   <br>
+                   <font color='red'><%= game["Bplayer bgamescore"] %></font>
+              <% end %>
               <%if game["Players_scorechanged"] %>
-                <br>
-                <font color='red'>(-<%= game["Players_scorechanged"].to_s %>) </font>
+                 <font color='red'>:(-<%= game["Players_scorechanged"].to_s %>) </font>
              <%end%>
           </td>
           <td align=left><font color=blue><%= game["detailrecords"] %></font></td>
