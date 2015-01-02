@@ -31,7 +31,7 @@
           <td> <%= player["serial"] %></font></td>
           <td>  <%= player["id"] %></font></td>
           <td style="white-space: nowrap;">
-             <%= link_to cal_show_player_games_uploadgames_path(@uploadgame,:player_name=>player["name"]) do %>
+             <%= link_to cal_show_player_games_uploadgames_path(@uploadgame,:player_name=>player["name"]) , :remote=>true, data: {toggle: "modal", target: "#player_modal"} do %>
               <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"> <%= player["name"] %></font>
           <% end %>
           </td>
@@ -93,7 +93,7 @@
           <tr>
           <td align=left><font color=blue><%= game["group"] %></font></td>
           <td align=center>
-            <%= link_to cal_show_player_games_uploadgames_path(@uploadgame,:player_name=>game["Aplayer"]) do %>
+            <%= link_to cal_show_player_games_uploadgames_path(@uploadgame,:player_name=>game["Aplayer"]),:remote=>true, data: {toggle: "modal", target: "#player_modal"} do %>
               <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"> <%= game["Aplayer"] %> </font>
             <% end %>
                   
@@ -107,8 +107,8 @@
           </td>
           <td align=center><font color=blue><%= game["gameresult"] %></font></td>
           <td align=center>
-            <%= link_to cal_show_player_games_uploadgames_path(@uploadgame,:player_name=>game["Blayer"]) do %>
-                       <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"> <%= game["Bplayer"] %> </font>
+            <%= link_to cal_show_player_games_uploadgames_path(@uploadgame,:player_name=>game["Blayer"]),:remote=>true, data: {toggle: "modal", target: "#player_modal"} do %>
+              <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"> <%= game["Bplayer"] %> </font>
             <% end %>
                  
             <br> 
@@ -126,7 +126,34 @@
     </tboody>  
   </table> 
 </div>
+<!-- Modal -->  
+<div class="modal fade" id="player_modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn btn-default" data-dismiss="modal">關閉視窗</button>                 
+      </div>
+    <div class="modal-body">
+      <div class="container">
+        <div class="row">   
+          <div id="modal_content">
+          </div>
+                
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal">關閉視窗</button>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
+
+
+
+
+
+ 
 
    
     
