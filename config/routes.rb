@@ -4,7 +4,6 @@ Lttfproject::Application.routes.draw do
 
 
  match '/home' => 'home#index'
-
  resources :holdgames do
       resources :gamegroups, :controller => 'holdgame_gamegroups' do
         collection do
@@ -44,6 +43,9 @@ Lttfproject::Application.routes.draw do
       post :caculatescore
       get  :gamescorechecking
       get  :show_player_games
+      get  :cal_show_player_games
+      get  :publish_show_player_games
+      get  :displayupload_show_player_games
     end
     member do
       post :calculategamepage
@@ -52,8 +54,11 @@ Lttfproject::Application.routes.draw do
     end  
   end  
 
-  resources :games
-
+  resources :games do
+    collection do 
+      get  :show_player_games
+    end  
+  end
 
 
 devise_for :users, :controllers => {:registrations => 'users/registrations', :omniauth_callbacks => 'users/omniauth_callbacks' }
