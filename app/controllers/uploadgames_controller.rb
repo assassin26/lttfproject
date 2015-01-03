@@ -182,7 +182,7 @@ class UploadgamesController < ApplicationController
      
     end  
      
-     #UserMailer.gamerecords_publish_notice_to_FB( uploadgame).deliver 
+     UserMailer.gamerecords_publish_notice_to_FB( uploadgame).deliver 
   end
   def publishuploadgame
 
