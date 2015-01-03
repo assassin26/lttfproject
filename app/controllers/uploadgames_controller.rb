@@ -171,6 +171,9 @@ class UploadgamesController < ApplicationController
   def send_publish_notice_to_players(uploadgame) 
     @playerssummery=uploadgame.getplayersummary
     @gamesrecords=uploadgame.getdetailgamesrecord
+    @adjustplayers=set_adjust_players(@playerssummery)
+    @adjustplayers=Uploadgame.hash_calculate_score(@adjustplayers, @gamesrecords)
+
     @playerssummery.each do |player|
       @playergames=@gamesrecords.find_all{|v| (v["Aplayer"]==player["name"])||(v["Bplayer"]==player["name"])}
       @user=User.find(player["id"].to_i)
@@ -179,7 +182,7 @@ class UploadgamesController < ApplicationController
      
     end  
      
-     UserMailer.gamerecords_publish_notice_to_FB( uploadgame).deliver 
+     #UserMailer.gamerecords_publish_notice_to_FB( uploadgame).deliver 
   end
   def publishuploadgame
 
