@@ -85,7 +85,8 @@
         <%  @gamesrecords.each do |game| %>
           <tr>
           <td align=left><font color=blue><%= game["group"] %></font></td>
-          <% if game["Aplayer"]==current_user.username %>
+
+          <% if current_user && game["Aplayer"]==current_user.username %>
               <td align=center bgcolor=yellow>
                     <%= link_to show_player_games_uploadgames_path(@uploadgame,:player_name=>game["Aplayer"]), :remote=>true, data: {toggle: "modal", target: "#player_modal"} do %>
                        <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"> <%= game["Aplayer"] %> </font>
@@ -115,7 +116,7 @@
           <%end%>  
 
           <td align=center><font color=blue><%= game["gameresult"] %></font></td>
-          <% if game["Bplayer"]==current_user.username %>
+          <% if current_user && game["Bplayer"]==current_user.username %>
             <td align=center bgcolor=yellow>
               <%= link_to show_player_games_uploadgames_path(@uploadgame,:player_name=>game["Bplayer"]), :remote=>true, data: {toggle: "modal", target: "#player_modal"} do %>
                 <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"> <%= game["Bplayer"] %> </font>

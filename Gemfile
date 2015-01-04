@@ -77,6 +77,3 @@ gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2'
 gem "rails_autolink", "~> 1.0.9"
 gem 'google-api-client'
-group :assets do
- gem 'bootstrap-modal-rails'
-end
