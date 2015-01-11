@@ -400,14 +400,36 @@ class Uploadgame < ActiveRecord::Base
       @dummy,@player["serial"],@player["id"], @player["name"],@player["bgamescore"],@player["wongames"],@player["losegames"],@player["agamescore"],
                 @player["scorechanged"],@player["suggestscore"],@player["adjustscore"],@player["original bscore"]= playersummery.split("_")
       @player["id"]=@player["id"].to_i
+
+      @playerindb = User.find(@player["id"].to_i).playerprofile
+
+      @player["bgamescore"] =  (@playerindb.curscore==@player["original bscore"].to_i) ? @player["bgamescore"].to_i : @playerindb.curscore 
+
       @player["bgamescore"]=@player["bgamescore"].to_i
       @player["wongames"]=@player["wongames"].to_i
       @player["losegames"]=@player["losegames"].to_i
       @player["agamescore"]=@player["agamescore"].to_i
       @player["scorechanged"]=@player["scorechanged"].to_i
       @player["suggestscore"]=@player["suggestscore"].to_i
-      @player["adjustscore"]=@player["adjustscore"].to_i if @player["adjustscore"]!=nil
-      @player["original bscore"]=@player["original bscore"].to_i if @player["original bscore"]!=nil
+      if @player["original bscore"]!=nil
+      
+         if @playerindb.curscore==@player["original bscore"].to_i
+           @player["adjustscore"]=@player["adjustscore"].to_i if  @player["adjustscore"]!=nil
+         else
+          @player["adjustscore"]=0
+         end 
+      else
+         @player["adjustscore"]=@player["adjustscore"].to_i if  @player["adjustscore"]!=nil
+      end      
+      if @player["original bscore"]!=nil
+        if @playerindb.curscore!=@player["original bscore"].to_i
+          @player["original bscore"]=@playerindb.curscore
+        else
+          @player["original bscore"]=@player["original bscore"].to_i
+        end  
+      end  
+     
+     
       @playerssummery.push(@player)
     end  
     @playerssummery  
