@@ -15,7 +15,7 @@ class Game < ActiveRecord::Base
       @player["losegames"]=@player["losegames"].to_i
       @player["agamescore"]=@player["agamescore"].to_i
       @player["scorechanged"]=@player["scorechanged"].to_i
-      @player["suggestscore"]=@player["suggestscore"].to_i
+      @player["suggestscore"]=@player["suggestscore"].to_i if @player["suggestscore"]!=nil
       @player["adjustscore"]=@player["adjustscore"].to_i if @player["adjustscore"]!=nil
       @player["original bscore"]=@player["original bscore"].to_i if @player["original bscore"]!=nil
       @playerssummery.push(@player)
@@ -26,11 +26,10 @@ class Game < ActiveRecord::Base
   def getdetailgamesrecord
 
     gamesrecords=Array.new
-        
-    detailgamesrecord= self.detailgameinfo.split("]")
-     
+    if self.detailgameinfo
 
-    detailgamesrecord.each do |singlegamerecord|
+      detailgamesrecord= self.detailgameinfo.split("]")
+      detailgamesrecord.each do |singlegamerecord|
     
       singlegame=singlegamerecord.split("|")
       if singlegame.count==4 #old format
@@ -57,6 +56,7 @@ class Game < ActiveRecord::Base
           gamesrecords.push(gamesarray)
       end  
     end
+  end
     gamesrecords
   end  
 
