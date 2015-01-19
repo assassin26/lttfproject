@@ -98,7 +98,7 @@ class UploadgamesController < ApplicationController
     
     #@uploadgame=Uploadgame.upload(holdgame.inputfileurl)
     @uploadgame=Uploadgame.upload(@holdgame)
-    if @uploadgame.class != Hash  #return Arry means found error player 
+    if @uploadgame.class != Array  #return Arry means found error player 
       @Playerlisterr=false
       @Erroplayerlist=[]
       @playerssummery=@uploadgame.getplayersummary
