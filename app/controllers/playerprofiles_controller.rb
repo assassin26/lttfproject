@@ -20,15 +20,17 @@ class PlayerprofilesController < ApplicationController
 
   def search
     reg = /^\d+$/
-    if ! reg.match(params[:keyword].strip)
+    if params[:keyword]
+      if ! reg.match(params[:keyword].strip)
             @playerprofiles = Playerprofile.includes(:user).where( [ "name like ?", "%#{params[:keyword].strip}%" ]).order(sort_column + " " + sort_direction).page( params[:page] ).per(50)
 
-    else
-      @playerprofiles=Array.new
-      @tempid=params[:keyword].to_i
-      @playerprofiles = Playerprofile.includes(:user).where( :user_id => @tempid).order(sort_column + " " + sort_direction).page( params[:page] ).per(50)
+      else
+        @playerprofiles=Array.new
+        @tempid=params[:keyword].to_i
+        @playerprofiles = Playerprofile.includes(:user).where( :user_id => @tempid).order(sort_column + " " + sort_direction).page( params[:page] ).per(50)
 
-     
+      end 
+    
     end  
    # @playerprofiles = Playerprofile.where( [ "name like ?", "%#{params[:keyword]}%" ]).page( params[:page] ).per(100)
     render :action => :index

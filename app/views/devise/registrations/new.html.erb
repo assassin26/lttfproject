@@ -48,7 +48,7 @@
             <div class="form-group">
               <div class="col-xs-12 col-md-12 col-lg-12">
                 <%= f.label "電話", :class => "form-label" %>:
-                <%= f.text_field :phone, :class =>"form-control",:size => "50",:placeholder =>"僅提供積分賽主辦人連絡用!" %>
+                <%= f.text_field :phone, :required => true, :class =>"form-control",:size => "50",:placeholder =>"必須填寫,僅提供積分賽主辦人連絡用!" %>
               </div>
             </div>
             <div class="col-xs-12 col-md-12 col-lg-12"></br></div>

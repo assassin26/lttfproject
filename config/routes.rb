@@ -26,7 +26,9 @@ Lttfproject::Application.routes.draw do
          end  
         
       end
-      
+    collection do
+      get :copy_players_list
+    end  
   end
 
 

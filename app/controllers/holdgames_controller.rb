@@ -116,6 +116,64 @@ def copy_file(client, origin_file_id, copy_title)
     flash[:error]="An error occurred: #{result.data['error']['message']}"
   end
 end
+def copy_players_list
+
+  holdgame=Holdgame.find(params[:format])
+  client = Google::APIClient.new(
+         :application_name => 'lttfprojecttest',
+          :application_version => '1.0.0')
+   #fileid=APP_CONFIG['Inupt_File_Template'].to_s.match(/[-\w]{25,}/).to_s
+   
+    keypath = Rails.root.join('config','client.p12').to_s
+    key = Google::APIClient::KeyUtils.load_from_pkcs12( keypath, 'notasecret')
+    client.authorization = Signet::OAuth2::Client.new(
+     :token_credential_uri => 'https://accounts.google.com/o/oauth2/token',
+     :audience => 'https://accounts.google.com/o/oauth2/token',
+     :scope => 'https://spreadsheets.google.com/feeds/',
+     :issuer => APP_CONFIG[APP_CONFIG['HOST_TYPE']]['Google_Issuer'].to_s,
+     :access_type => 'offline' ,
+     :approval_prompt=>'force',
+     :signing_key => key)
+     client.authorization.fetch_access_token!
+ 
+    connection = GoogleDrive.login_with_oauth( client.authorization.access_token)
+    #@newgame=Uploadgame.new
+    spreadsheet = connection.spreadsheet_by_url(holdgame.inputfileurl)
+    playerlistws=spreadsheet.worksheets[0]
+
+    players_count=playerlistws.num_rows
+    (1..players_count).each do |row|
+      playerlistws[row,1]=''
+      playerlistws[row,2]=''
+      playerlistws[row,3]=''
+    end  
+    
+    playerlist=Array.new
+    holdgame.gamegroups.each do |gamegroup|
+
+       playerlist +=gamegroup.allgroupattendee.in_groups_of(gamegroup.noofplayers,false)[0]
+       
+    end  
+    playerlist=playerlist.uniq{|x| x.player_id}
+    #playerlist=playerlist.sort_by{|e| e[:player_id]}
+    playerlistws[1,1]=holdgame.startdate.to_s+holdgame.gamename
+    playerlistws[2,1]='比賽日期:'
+    playerlistws[2,2]=holdgame.startdate
+    playerlistws[3,1]='比賽名稱:'
+    playerlistws[3,2]=holdgame.gamename
+    playerlistws[4,1]='主辦人員:'
+    playerlistws[4,2]=holdgame.gameholder.name
+    playerlistws[6,1]='已報名球員名單(含備取)'
+    playerlist.each_with_index do |player,row|
+        playerlistws[row+7,1]=row+1
+        playerlistws[row+7,2]=player.name
+        playerlistws[row+7,3]=player.player_id
+      end
+    playerlistws.save
+
+    redirect_to holdgame.inputfileurl
+  
+end
 def create_gameinputfile(filename)
   client = Google::APIClient.new(
          :application_name => 'lttfprojecttest',
