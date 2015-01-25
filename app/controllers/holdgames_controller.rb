@@ -119,6 +119,13 @@ end
 def copy_players_list
 
   holdgame=Holdgame.find(params[:format])
+  playerlist=Array.new
+  holdgame.gamegroups.each do |gamegroup|
+    playerlist +=gamegroup.allgroupattendee.in_groups_of(gamegroup.noofplayers,false)[0]
+   
+  end  
+  playerlist=playerlist.uniq{|x| x.player_id}
+
   client = Google::APIClient.new(
          :application_name => 'lttfprojecttest',
           :application_version => '1.0.0')
@@ -142,19 +149,14 @@ def copy_players_list
     playerlistws=spreadsheet.worksheets[0]
 
     players_count=playerlistws.num_rows
+    keepplayerlist=Array.new
     (1..players_count).each do |row|
-      playerlistws[row,1]=''
-      playerlistws[row,2]=''
-      playerlistws[row,3]=''
+      playerlistws[row,1]=nil
+      playerlistws[row,2]=nil
+      playerlistws[row,3]=nil
     end  
     
-    playerlist=Array.new
-    holdgame.gamegroups.each do |gamegroup|
 
-       playerlist +=gamegroup.allgroupattendee.in_groups_of(gamegroup.noofplayers,false)[0]
-       
-    end  
-    playerlist=playerlist.uniq{|x| x.player_id}
     #playerlist=playerlist.sort_by{|e| e[:player_id]}
     playerlistws[1,1]=holdgame.startdate.to_s+holdgame.gamename
     playerlistws[2,1]='比賽日期:'
@@ -163,12 +165,12 @@ def copy_players_list
     playerlistws[3,2]=holdgame.gamename
     playerlistws[4,1]='主辦人員:'
     playerlistws[4,2]=holdgame.gameholder.name
-    playerlistws[6,1]='已報名球員名單(含備取)'
+    playerlistws[6,1]='已報名球員名單'
     playerlist.each_with_index do |player,row|
         playerlistws[row+7,1]=row+1
         playerlistws[row+7,2]=player.name
-        playerlistws[row+7,3]=player.player_id
-      end
+    end
+   
     playerlistws.save
 
     redirect_to holdgame.inputfileurl
