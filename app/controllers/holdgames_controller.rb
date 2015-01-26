@@ -153,8 +153,7 @@ def copy_players_list
     (1..players_count).each do |row|
       playerlistws[row,1]=nil
       playerlistws[row,2]=nil
-      playerlistws[row,3]=nil
-    end  
+     end  
     
 
     #playerlist=playerlist.sort_by{|e| e[:player_id]}
@@ -166,6 +165,7 @@ def copy_players_list
     playerlistws[4,1]='主辦人員:'
     playerlistws[4,2]=holdgame.gameholder.name
     playerlistws[6,1]='已報名球員名單'
+    
     playerlist.each_with_index do |player,row|
         playerlistws[row+7,1]=row+1
         playerlistws[row+7,2]=player.name

@@ -24,7 +24,9 @@ class Uploadgame < ActiveRecord::Base
     datereg=/^\d*\/\d{2}\/\d{4}$/
     tempdate=gameinfows[2,2].to_s
     tempdates=tempdate.split("/")
-    tempdate=tempdates[2]+"-"+tempdates[0]+"-"+tempdates[1]
+    if (tempdates.length>2) #old version
+      tempdate=tempdates[2]+"-"+tempdates[0]+"-"+tempdates[1]
+    end  
     newgame.gamedate=tempdate.to_date.strftime("%F")
     newgame.recorder=gameinfows[4,2]
     newgame
