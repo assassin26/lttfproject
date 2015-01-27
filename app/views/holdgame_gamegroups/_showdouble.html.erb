@@ -88,7 +88,7 @@
 <div class="table-responsive datagrid">
 <table class="table-striped table-condensed" border=1 >
 <tr>
-  <% if current_user && (@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser) )  %>
+  <% if current_user && (@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser) || @holdgame.find_gamecoholder(current_user.id))  %>
      <td><%= button_to '修改分組資料', edit_holdgame_gamegroup_path(@holdgame, gamegroup), :method=>:get %></td>
 
      <td><%= button_to '刪除此分組', holdgame_gamegroup_path(@holdgame, gamegroup),
@@ -140,7 +140,7 @@
                     <i class="fa fa-file-o"></i>&nbsp;<font color="#3A01DF"><%=  player.name %></font>
                   <% end %>
 
-                  <% if current_user && (@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser) ) &&(player.phone)  %>
+                  <% if current_user && (@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser) || @holdgame.find_gamecoholder(current_user.id) ) && (player.phone)  %>
 
                   <br><%= player.phone %>
                   <%end%>
@@ -154,7 +154,7 @@
                   <td style="text-align:center"><font color='blue'><strong>正選</strong></font></td>
                 <%end%>                          
                 <td style="text-align:center">
-                    <% if current_user && (player.player_id==current_user.id ||  player.registor_id==current_user.id ||@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser) )  %>
+                    <% if current_user && (player.player_id==current_user.id ||  player.registor_id==current_user.id ||@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser)|| @holdgame.find_gamecoholder(current_user.id) )  %>
                       <%= button_to '取消報名', cancel_player_registration_indouble_holdgame_gamegroups_path(@holdgame, gamegroup, :user_in_groupattendant=>gamegroup.find_player_in_attendants(player.player_id)) ,  {:onclick => "return confirm('確定取消報名?')", :method => :post}  %>
                     <%end%>
                 </td>  

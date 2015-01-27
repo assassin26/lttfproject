@@ -111,7 +111,7 @@
           <th style="text-align:center">目前積分</th>
           <th style="text-align:center">備註/報名積分</th>
           <th style="text-align:center"></th>
-           <% if current_user && (@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser) )  %>
+           <% if current_user && (@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser)|| @holdgame.find_gamecoholder(current_user.id) )  %>
           <th style="text-align:center">電話</th>
           <% end %>
           </tr>
@@ -151,7 +151,8 @@
                 <%end%>
                 </td>
                
-                <% if current_user && (player.player_id==current_user.id ||  player.registor_id==current_user.id ||@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser) )  %>
+                <% if current_user && (player.player_id==current_user.id ||  player.registor_id==current_user.id ||@holdgame.gameholder.user_id==current_user.id|| current_user.has_role?(:admin)||current_user.has_role?(:superuser) || 
+                  @holdgame.find_gamecoholder(current_user.id)  )  %>
                  <td style="text-align:center">    
                       <%= button_to '取消報名', cancel_player_registration_holdgame_gamegroups_path(@holdgame, gamegroup, :user_in_groupattendant=>gamegroup.find_player_in_attendants(player.player_id)) ,  {:onclick => "return confirm('確定取消報名?')", :method => :post}  %>
                     
