@@ -34,7 +34,12 @@
                   <td><%= holdgame.startdate.strftime('%F') %>~<%= holdgame.enddate.strftime('%F') %></td>
                 <%end%>    
                 <td><%= holdgame.gameholder.courtname %></td>
-                <td><%= holdgame.gameholder.name %></td>
+                <td><%= holdgame.gameholder.name %>
+                  <% holdgame.gamecoholders.each do |coholder| %>
+                    <br>
+                   、<%= coholder.name %>
+                   <% end %>
+                </td>
                 <td>
                   <p style="white-space: pre-line ;width:auto; text-align:justify ">
                     <%= holdgame.gamenote %>
