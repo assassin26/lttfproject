@@ -4,6 +4,7 @@ class Holdgame < ActiveRecord::Base
   attr_accessible :city, :county, :address, :zipcode, :courtname, :lat, :lng, :url , :lttfgameflag, :contact_phone , :contact_email
   attr_accessible :gameinfofile, :gamedays
   belongs_to :gameholder
+  has_many :gamecoholders ,dependent: :destroy
   has_many :gamegroups , dependent: :destroy
   has_one :uploadgame
   after_commit :assign_informs_from_holder
@@ -11,7 +12,7 @@ class Holdgame < ActiveRecord::Base
   default_scope  order('startdate ASC , zipcode ASC ')
   mount_uploader :gameinfofile,  GameInfofileUploader
   before_save :assign_enddate
-
+  accepts_nested_attributes_for :gamecoholders, :allow_destroy => true
   def assign_enddate
      self.gamedays=1 if self.gamedays<=0 || !self.gamedays
      self.enddate=self.startdate+self.gamedays-1 
@@ -57,5 +58,13 @@ class Holdgame < ActiveRecord::Base
     end 
    
     return playergroups 
+  end 
+  def find_gamecoholder(player_id)
+
+      if self.gamecoholders.find_all{|v| v.co_holderid==player_id}.empty?
+        return false
+      else
+        return true
+      end 
   end  
 end

@@ -67,13 +67,13 @@
                 <%= f.label '報名方式:',:class => "control-label", :for=> "raidos"  %>
 
                 <label class="radio inline" for="gamegroup_regtype_single">
-                <%= f.radio_button :regtype , "single", :checked => 'checked',:class => "form-control" %>個人
+                <%= f.radio_button :regtype , "single", :checked => 'checked',:class => "form-control", :onClick=>"regtypenotdoubleclick();" %>個人
                </label>
                 <label class="radio inline" for="gamegroup_regtype_double">
-                <%= f.radio_button :regtype , "double",:class => "form-control"  %>兩人
+                <%= f.radio_button :regtype , "double",:class => "form-control" , :onClick=>"regtypedoubleclick();" %>兩人
                  </label>
                   <label class="radio inline" for="gamegroup_regtype_double">
-                <%= f.radio_button :regtype , "team" ,:class => "form-control"%>團隊
+                <%= f.radio_button :regtype , "team" ,:class => "form-control" , :onClick=>"regtypedoubleclick();" %>團隊
               </label>
               </div>
          
@@ -83,23 +83,48 @@
 
             <div class="form-group">
               <div class="col-xs-12 col-md-12 col-lg-12">
-                <%= f.label "積分限制:", :class => "form-label" %>
-                <%= f.select  :scorelimitation, ['限制高低分','限制最高分', '限制最低分', '無積分限制'], {:required => true, :class => "form-control", :size => "50"},  :onchange=>"toggleSelect();" %>
+                <%= f.label "個人積分限制:", :class => "form-label" %>
+                <%= f.select  :scorelimitation, ['限制高低分','限制最高分', '限制最低分', '無積分限制'], {:required => true, :class => "form-control", :size => "50"},  :onchange=>"toggleSingleSelect();" %>
               </div>
             </div>   
             <br>
             <div class="form-group">
               <div class="col-xs-12 col-md-12 col-lg-12">
-                <%= f.label "低分限制:", :class => "form-label",:id=> "low-label" %>
-                <%= f.number_field :scorelow ,:required => true, :class => "form-control" ,:size=>"50" %>
+                <%= f.label "個人低分限制:", :class => "form-label",:id=> "low-label" %>
+                <%= f.number_field :scorelow , :class => "form-control" ,:size=>"50" %>
               </div>
             </div>                  
             <div class="form-group">
               <div class="col-xs-12 col-md-12 col-lg-12">
-                <%= f.label "高分限制:", :class => "form-label", :id=> "high-label" %>
-                <%= f.number_field :scorehigh , :required => true, :class => "form-control", :size=>"50" %>
+                <%= f.label "個人高分限制:", :class => "form-label", :id=> "high-label" %>
+                <%= f.number_field :scorehigh ,  :class => "form-control", :size=>"50" %>
               </div>
-            </div>         
+            </div> 
+            <br><br>  
+           
+               <div id="double-block" style="display:none">
+ 
+              <div class="form-group">
+              <div class="col-xs-12 col-md-12 col-lg-12">
+                <%= f.label "雙打/團體總和積分限制:", :class => "form-label" , :id=> "double-limit-label"%>
+                <%= f.select  :double_score_sum_limitation, ['限制高低分','限制最高分', '限制最低分', '無積分限制'], {:required => true, :class => "form-control", :size => "50"},  :onchange=>"toggleDoubleSelect();" %>
+              </div>
+            </div>   
+            <br>
+            <div class="form-group">
+              <div class="col-xs-12 col-md-12 col-lg-12">
+                <%= f.label "雙打/團體總和低分限制:", :class => "form-label",:id=> "double-low-label" %>
+                <%= f.number_field :double_scorelow , :class => "form-control" ,:size=>"50" %>
+              </div>
+            </div>                  
+            <div class="form-group">
+              <div class="col-xs-12 col-md-12 col-lg-12">
+                <%= f.label "雙打/團體總和高分限制:", :class => "form-label", :id=> "double-high-label" %>
+                <%= f.number_field :double_scorehigh , :class => "form-control", :size=>"50" %>
+              </div>
+            </div>  
+            </div>
+
   
             <div class="col-xs-12 col-md-12 col-lg-12"></br></div>
               <div class="col-md-offset-4 col-md-5">
@@ -148,7 +173,8 @@ $("#gamegroup_starttime").datetimepicker({dateFormat:"yy-mm-dd",
 
 </script>
 <script type="text/javascript">
-function toggleSelect()
+
+function toggleSingleSelect()
 {
  
 if (document.getElementById("gamegroup_scorelimitation").value == '限制最高分')
@@ -181,4 +207,57 @@ if (document.getElementById("gamegroup_scorelimitation").value == '無積分限�
     document.getElementById("low-label").style.display="none";
 } 
 }
+function toggleDoubleSelect()
+{
+ 
+if (document.getElementById("gamegroup_double_score_sum_limitation").value == '限制最高分')
+{
+   document.getElementById("gamegroup_double_scorelow").style.display="none";
+   document.getElementById("double-low-label").style.display="none";
+   document.getElementById("gamegroup_double_scorehigh").style.display="block";
+   document.getElementById("double-high-label").style.display="block";
+  // document.getElementById("gamegroup_scorelow").visibled = true;
+}
+if (document.getElementById("gamegroup_double_score_sum_limitation").value == '限制最低分')
+{
+    document.getElementById("gamegroup_double_scorehigh").style.display="none";
+    document.getElementById("double-high-label").style.display="none";
+    document.getElementById("gamegroup_double_scorelow").style.display="block";
+    document.getElementById("double-low-label").style.display="block";
+}
+if (document.getElementById("gamegroup_double_score_sum_limitation").value == '限制高低分')
+{
+    document.getElementById("gamegroup_double_scorehigh").style.display="block";
+    document.getElementById("double-high-label").style.display="block";
+    document.getElementById("gamegroup_double_scorelow").style.display="block";
+    document.getElementById("double-low-label").style.display="block";
+}
+if (document.getElementById("gamegroup_double_score_sum_limitation").value == '無積分限制')
+{
+    document.getElementById("gamegroup_double_scorehigh").style.display="none";
+    document.getElementById("double-high-label").style.display="none";
+    document.getElementById("gamegroup_double_scorelow").style.display="none";
+    document.getElementById("double-low-label").style.display="none";
+} 
+}
+function regtypedoubleclick()
+{
+  document.getElementById("double-block").style.display="block";
+  document.getElementById("gamegroup_double_score_sum_limitation").style.display="block";
+  document.getElementById("double-limit-label").style.display="block";
+  document.getElementById("gamegroup_double_scorehigh").style.display="block";
+  document.getElementById("double-high-label").style.display="block";
+  document.getElementById("gamegroup_double_scorelow").style.display="block";
+  document.getElementById("double-low-label").style.display="block"; 
+} 
+function regtypenotdoubleclick()
+{
+    document.getElementById("double-block").style.display="none";
+    document.getElementById("gamegroup_double_score_sum_limitation").style.display="none";
+    document.getElementById("double-limit-label").style.display="none";
+    document.getElementById("gamegroup_double_scorehigh").style.display="none";
+    document.getElementById("double-high-label").style.display="none";
+    document.getElementById("gamegroup_double_scorelow").style.display="none";
+    document.getElementById("double-low-label").style.display="none";
+} 
 </script>

@@ -100,6 +100,7 @@ class HoldgamesController < InheritedResources::Base
 #   Title of the copy
 # @return [Google::APIClient::Schema::Drive::V2::File]
 #   The copied file if successful, nil otherwise
+
 def copy_file(client, origin_file_id, copy_title)
 
   drive = client.discovered_api('drive', 'v2')

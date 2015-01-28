@@ -2,6 +2,7 @@
 class Gamegroup < ActiveRecord::Base
   attr_accessible :gamefee, :groupname, :grouptype, :holdgame_id, :noofbackupplayers, :noofplayers, :scorehigh
   attr_accessible :scorelimitation, :scorelow, :starttime , :regtype
+  attr_accessible :double_score_sum_limitation, :double_scorehigh, :double_scorelow
   belongs_to :holdgame
   has_many :groupattendants, dependent: :destroy
   default_scope order('id ASC')
@@ -16,7 +17,32 @@ class Gamegroup < ActiveRecord::Base
   	end	
   	return nil
   end
-  def check_meet_group_qualify(player_curscore)
+  def single_limit_string
+     case self.scorelimitation
+      when '無積分限制'
+         return '個人: 無限制'
+      when '限制高低分'
+       return ('個人: '+self.scorelow.to_s+'~~'+self.scorehigh.to_s)
+      when '限制最高分'
+         return ('個人: 小於'+self.scorehigh.to_s) 
+      when '限制最低分'                                    
+        return ('個人: 大於'+self.scorelow.to_s) 
+    end 
+  end
+  def double_team_limit_string
+     case self.double_score_sum_limitation
+      when '無積分限制'
+         return '積分總和: 無限制'
+      when '限制高低分'
+       return ('積分總和: '+self.double_scorelow.to_s+'~~'+self.double_scorehigh.to_s)
+      when '限制最高分'
+         return ('積分總和: 小於'+self.double_scorehigh.to_s) 
+      when '限制最低分'                                    
+        return ('積分總和: 大於'+self.double_scorelow.to_s) 
+    end 
+    
+  end
+  def check_single_meet_group_qualify(player_curscore)
     return true if player_curscore==0
       
   	case self.scorelimitation
@@ -30,6 +56,20 @@ class Gamegroup < ActiveRecord::Base
       when '限制最低分'                                    
         return (player_curscore>=self.scorelow) 
     end	
+  end
+  def check_double_team_meet_group_qualify(scoresum)
+         
+    case self.double_score_sum_limitation
+      when '無積分限制'
+         return true
+      when '限制高低分'
+       return( (scoresum >= self.double_scorelow) &&
+            (scoresum<=self.double_scorehigh) )
+      when '限制最高分'
+         return (scoresum<=self.double_scorehigh) 
+      when '限制最低分'                                    
+        return (scoresum>=self.double_scorelow) 
+    end 
   end
   def allgroupattendee
     case self.regtype

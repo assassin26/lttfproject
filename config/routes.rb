@@ -28,6 +28,7 @@ Lttfproject::Application.routes.draw do
       end
     collection do
       get :copy_players_list
+      get :coholders
     end  
   end
 
@@ -55,7 +56,7 @@ Lttfproject::Application.routes.draw do
       post :caculatescore
     end  
   end  
-
+  
   resources :games do
     collection do 
       get  :show_player_games
@@ -93,7 +94,12 @@ devise_for :users, :controllers => {:registrations => 'users/registrations', :om
       put :update
       get :lttfgamesindex
      end
-  end    
+  end
+  resources :gamecoholders do
+     collection do
+       get :coholderinput
+     end 
+  end   
   get "fbconnections/removefbconnect" => "fbconnections#removefbconnect"
   get "fbconnections/resetfbconnect" => "fbconnections#resetfbconnect"
   

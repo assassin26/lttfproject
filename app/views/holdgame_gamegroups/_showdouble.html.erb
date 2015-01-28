@@ -18,7 +18,7 @@
         <td ><strong><%= gamegroup.starttime.strftime("%F %H:%M")  %></strong></td>
       </tr>
 
-      <% if gamegroup.scorelimitation == '無積分限制' %>	
+   
         <tr> 
           <td ><font color="black">報名費用:</font></td>
           <td ><font color="black">積分限制:</font></td>
@@ -27,53 +27,14 @@
         </tr>
         <tr> 
           <td><strong><%=gamegroup.gamefee %></strong></td>    
-          <td><strong><%=gamegroup.scorelimitation %></strong></td> 
+          <td><strong>
+             <%=gamegroup.single_limit_string %><br>
+             <%=gamegroup.double_team_limit_string %>
+          </strong></td> 
           <td><strong><%=gamegroup.noofplayers %></strong></td>
           <td><strong><%=gamegroup.totalresgisteredsplayersno %></strong></td>
         </tr>
-      <% end %>
-      <% if gamegroup.scorelimitation == '限制高低分' %>	
-        <tr>
-          <td ><font color="black">報名費用:</font></td>
-          <td><font color="black">積分限制:</font></td>
-          <td><font color="black">預計參賽隊數:</font></td> 
-          <td><font color="black">已報名隊數:</font></td> 
-        </tr>
-        <tr>
-          <td><strong><%=gamegroup.gamefee %></strong></td>    
-          <td><strong><%=gamegroup.scorelow%>~~<%=gamegroup.scorehigh%></strong></td> 
-          <td><strong><%=gamegroup.noofplayers %></strong></td>
-          <td><strong><%=gamegroup.totalresgisteredsplayersno %></strong></td>
-        </tr>
-        <% end %>
-      <% if gamegroup.scorelimitation == '限制最高分' %>	
-        <tr> 
-          <td><font color="black">報名費用:</font></td>
-          <td><font color="black">積分限制:</font></td>
-          <td><font color="black">預計參賽隊數:</font></td> 
-          <td><font color="black">已報名隊數:</font></td>  
-        </tr>
-        <tr>
-          <td><strong><%=gamegroup.gamefee %></strong></td>    
-          <td><strong>小於<%=gamegroup.scorehigh%></strong></td> 
-          <td><strong><%=gamegroup.noofplayers %></strong></td>
-          <td><strong><%=gamegroup.totalresgisteredsplayersno %></strong></td>
-        </tr>
-      <% end %>
-      <% if gamegroup.scorelimitation == '限制最低分' %>
-        <tr>	
-          <td ><font color="black">報名費用:</font></td>
-          <td><font color="black">積分限制:</font></td>
-          <td><font color="black">預計參賽/備取人數:</font></td> 
-          <td><font color="black">已報名人數(正選/備取):</font></td> 
-        </tr>
-        <tr>
-          <td><strong><%=gamegroup.gamefee %></strong></td>    
-          <td><strong>大於<%=gamegroup.scorelow%></strong></td> 
-          <td><strong><%=gamegroup.noofplayers %></strong></td>
-          <td><strong><%=gamegroup.totalresgisteredsplayersno %></strong></td>
-        </tr>
-        <% end %>        
+            
       </tbody> 
     
       
