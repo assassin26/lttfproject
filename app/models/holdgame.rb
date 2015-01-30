@@ -60,7 +60,6 @@ class Holdgame < ActiveRecord::Base
     return playergroups 
   end 
   def find_gamecoholder(player_id)
-
       if self.gamecoholders.find_all{|v| v.co_holderid==player_id}.empty?
         return false
       else

@@ -18,7 +18,11 @@ class HoldgameGamegroupsController < ApplicationController
      redirect_to :action => "index"
   end 
 def index
- 
+  if current_user
+    gon.log_in = 1
+  else
+    gon.log_in = 0
+  end  
   @gamegroups = @holdgame.gamegroups
   if !params[:targroupid] && !@gamegroups.empty?
     @targetgroup_id=@gamegroups.first.id
@@ -198,8 +202,7 @@ def doubleregistration(group_id, playerids)
   @curgroup=Gamegroup.find(group_id)
 
   @playerlist=Array.new
-  @playerlist=User.find(playerids).in_groups_of(2) if playerids
-
+  @playerlist=User.where(:id=> playerids.uniq).order_by_ids(playerids.uniq).in_groups_of(2) if playerids
   Groupattendant.transaction do
      
    
@@ -301,7 +304,8 @@ def teamplayersinput
   #@playerlist=Array.new #to avoid pass nil array to view 
   if params[:registration]
     if params[:teamname]!=""
-      @playerlist=User.find(params[:playerid].uniq) if params[:playerid]
+       @playerlist=User.where(:id=> params[:playerid].uniq).order_by_ids(params[:playerid].uniq) if params[:playerid]
+      #@playerlist=User.find(params[:playerid].uniq) if params[:playerid]
       scoresum=0
       @playerlist.each do |player|
         scoresum+=player.playerprofile.curscore
@@ -314,7 +318,7 @@ def teamplayersinput
         teamregistration(params[:format], @playerlist, params[:teamname],nil)
       end
     else
-       @playerlist=User.find(params[:playerid].uniq) if params[:playerid]
+        @playerlist=User.where(:id=> params[:playerid].uniq).order_by_ids(params[:playerid].uniq) if params[:playerid]
        #@curgroup=Gamegroup.find(params[:format])
        flash[:notice]='隊名不得為空白!請重新輸入'
     end 
@@ -324,7 +328,7 @@ def teamplayersinput
     
     elsif params[:getplayerfromuser] 
       if !params[:playerid] || params[:playerid].length<20
-         @playerlist=User.find(params[:playerid].uniq) if params[:playerid]
+         @playerlist=User.where(:id=> params[:playerid].uniq).order_by_ids(params[:playerid].uniq) if params[:playerid]
          #@curgroup=Gamegroup.find(params[:format])
          @teamname=params[:teamname]
         if params[:keyword] 
@@ -337,7 +341,7 @@ def teamplayersinput
           flash[:notice]='球友資料皆不為空白!請重新輸入'
         end 
       else
-         @playerlist=User.find(params[:playerid].uniq) if params[:playerid]
+         @playerlist=User.where(:id=> params[:playerid].uniq).order_by_ids(params[:playerid].uniq) if params[:playerid]
          @curgroup=Gamegroup.find(params[:format])
          flash[:notice]='團隊球員不得超過20位!'
       end  
@@ -354,7 +358,8 @@ def teamplayersadd
       @teamname=Groupattendant.find(params[:row_group].to_i).teamname
       teamplayer_ids=params[:teamarray].collect{|s| s.to_i}
       curplayers=Attendant.find(teamplayer_ids).collect(&:player_id)
-      @playerlist=User.find( curplayers)
+      #@playerlist=User.find( curplayers)
+       @playerlist=User.where(:id=> curplayers).order_by_ids(curplayers) 
    else
      @groupattendant_id=params[:groupattendantid]
      @playerlist=Array.new #to avoid pass nil array to view
@@ -362,7 +367,7 @@ def teamplayersadd
   if params[:registration]
     if params[:teamname]!=""
        @playerlist=Array.new
-       @playerlist=User.find(params[:playerid].uniq) if params[:playerid]
+       @playerlist=User.where(:id=> params[:playerid]).order_by_ids(params[:playerid]) if params[:playerid]
 
        @playerscorelist=Array.new
        scoresum=0
@@ -377,7 +382,7 @@ def teamplayersadd
           teamregistration(params[:format], @playerlist, params[:teamname],params[:groupattendantid])
         end
     else
-       @playerlist=User.find(params[:playerid].uniq) if params[:playerid]
+       @playerlist=User.where(:id=> params[:playerid].uniq).order_by_ids(params[:playerid].uniq) if params[:playerid]
      
        flash[:notice]='隊名不得為空白!請重新輸入'
     end 
@@ -387,7 +392,7 @@ def teamplayersadd
     
     elsif params[:getplayerfromuser] 
       if !params[:playerid] || params[:playerid].length<20
-         @playerlist=User.find(params[:playerid].uniq) if params[:playerid]
+         @playerlist=User.where(:id=> params[:playerid].uniq).order_by_ids(params[:playerid].uniq) if params[:playerid]
          @teamname=params[:teamname]
         if params[:keyword] 
           @newplayer=get_inputplayer(params[:playerid],params[:keyword])
@@ -418,7 +423,7 @@ def singleplayerinput
       @curgroup=Gamegroup.find(params[:format])
     
     elsif params[:getplayerfromuser] 
-      @playerlist=User.find(params[:playerid].uniq) if params[:playerid]
+      @playerlist=User.where(:id=> params[:playerid]).order_by_ids(params[:playerid]) if params[:playerid]
       @curgamegroupid=params[:format]
       @curgroup=Gamegroup.find(params[:format])
       if params[:keyword] 
@@ -476,7 +481,8 @@ def doubleplayersinput
     elsif params[:getplayerfromuser] 
 
       @playerlist=Array.new
-      @playerlist=User.find(params[:playerid].uniq) if params[:playerid]
+      #@playerlist=User.find(params[:playerid]) if params[:playerid]
+      @playerlist=User.where(:id=> params[:playerid]).order_by_ids(params[:playerid]) if params[:playerid]#to keep same order
       @curgamegroupid=params[:format]
       @curgroup=Gamegroup.find(params[:format])
 

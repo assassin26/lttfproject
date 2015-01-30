@@ -81,6 +81,14 @@ end
     end   
      
   end
+  def self.order_by_ids(ids)
+   order_by = ["case"]
+  ids.each_with_index.map do |id, index|
+    order_by << "WHEN id='#{id}' THEN #{index}"
+  end
+  order_by << "end"
+  order(order_by.join(" "))
+end
   def find_reg_unplay_games
       
       attendants=Attendant.where(:player_id=>self.id).find_all{|v| (v.groupattendant.gamegroup.holdgame.startdate>= Time.zone.now.to_date) }
