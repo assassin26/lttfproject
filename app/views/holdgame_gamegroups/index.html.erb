@@ -147,11 +147,18 @@
                   </div>
                   <div class="modal-body">
                     <div class="container">
-                      <div class="row">   
+                      <div class="row">  
+                      <% if !current_user%> 
                            <br><strong>親愛的球友:您尚未登入本積分系統，所以無法報名比賽!</strong>
                         <br><Strong>如果您尚未註冊，請即刻前往 <%= link_to "桌盟積分系統註冊網頁" ,new_user_registration_path%> 註冊!</Strong>
                         <br><br><Strong>如果您已是註冊會員，請先 <%= link_to "登入" ,new_user_session_path%> 後才可報名各項比賽!</Strong>
                           <br><Strong>如果您已設定FB帳號連結,可從FB <%= link_to(image_tag("/images/facebook.ico"),user_omniauth_authorize_path('facebook'))  %>登入。
+                      <% end %>
+                      <% if !current_user.phone %>
+                        <br><strong>親愛的球友:您的之前輸入基本資料並未輸入連絡電話，所以無法報名比賽!</strong>
+                        <br><Strong>請即刻前往 <%= link_to "修改個人資料網頁",edit_registration_path(current_user)%> 輸入連絡電話資料!</Strong>
+                       
+                      <%end%>    
                       </div>
                     </div>
                   </div>
@@ -168,7 +175,7 @@
 
 <script type="text/javascript">
     $(window).load(function(){
-      if( gon.log_in==0)
+      if( gon.log_in==0 || gon.nophone==1)
       {
         document.getElementById("startmodal").click();
       }  

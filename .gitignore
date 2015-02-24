@@ -38,3 +38,4 @@ capybara-*.html
 .rspec
 gemfile.lock
 /config/client.p12
+/app/views/user_mailer/newscore_publish_notice_to_FB.html - 複製.erb

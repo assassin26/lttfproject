@@ -56,7 +56,7 @@
      <td><%= button_to '刪除此分組', holdgame_gamegroup_path(@holdgame, gamegroup),
                               :method => :delete %></td>
   <% end %>                            
-  <% if current_user %>
+  <% if current_user && current_user.phone %>
    <td><%= link_to '報名參賽', teamplayersinput_holdgame_gamegroups_path(@holdgame,gamegroup, :name => 'init') , :class=> "button radius"  %></td>
   <% end %>  
   <td>  <%= link_to "輸出到excel", groupdumptoxls_holdgame_gamegroups_path(@holdgame,:gamegroup_id=>gamegroup.id,format: "xls") ,:class=> "button radius" %></td>             

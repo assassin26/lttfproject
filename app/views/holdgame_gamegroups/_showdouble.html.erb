@@ -55,7 +55,7 @@
      <td><%= button_to '刪除此分組', holdgame_gamegroup_path(@holdgame, gamegroup),
                               :method => :delete %></td>
   <% end %>                            
-  <% if current_user %>
+  <% if current_user && current_user.phone %>
   <td><%= button_to '報名參賽', doubleplayersinput_holdgame_gamegroups_path(@holdgame,gamegroup, :name => 'init') , :method=>:get  %></td>
   <% end %>  
   

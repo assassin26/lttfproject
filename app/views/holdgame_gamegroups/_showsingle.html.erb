@@ -54,13 +54,13 @@
 
        
 
-  <% if !user_in_group && user_meet_group && gamegroup.regtype=='single'%>
+  <% if !user_in_group && user_meet_group && gamegroup.regtype=='single' && current_user.phone %>
     <td> <%= button_to '本人報名',registration_holdgame_gamegroups_path(@holdgame,gamegroup),{:onclick => "return confirm('確定報名參賽?')", :method => :post}  %></td>
   <%end%>   
        
          
 </td>     
- <% if current_user %>
+ <% if current_user && current_user.phone %>
   <td><%= button_to '整批報名', singleplayerinput_holdgame_gamegroups_path(@holdgame,gamegroup, :name => 'init') , :method=>:get  %></td>
  <% end %>
 <td>  <%= link_to "輸出到excel", groupdumptoxls_holdgame_gamegroups_path(@holdgame,:gamegroup_id=>gamegroup.id,format: "xls"),:class=> "button radius" %></td>

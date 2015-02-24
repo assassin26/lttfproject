@@ -18,8 +18,12 @@ class HoldgameGamegroupsController < ApplicationController
      redirect_to :action => "index"
   end 
 def index
+
   if current_user
     gon.log_in = 1
+    if !current_user.phone
+       gon.nophone = 1
+    end  
   else
     gon.log_in = 0
   end  
