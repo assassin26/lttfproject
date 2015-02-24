@@ -122,9 +122,10 @@ def copy_players_list
   holdgame=Holdgame.find(params[:format])
   playerlist=Array.new
   holdgame.gamegroups.each do |gamegroup|
-    playerlist +=gamegroup.allgroupattendee.in_groups_of(gamegroup.noofplayers,false)[0]
+     playerlist +=gamegroup.allgroupattendee.in_groups_of(gamegroup.noofplayers,false)[0] 
    
   end  
+
   playerlist=playerlist.uniq{|x| x.player_id}
 
   client = Google::APIClient.new(

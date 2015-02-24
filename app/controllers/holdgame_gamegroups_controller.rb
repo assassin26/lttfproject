@@ -202,7 +202,7 @@ def doubleregistration(group_id, playerids)
   @curgroup=Gamegroup.find(group_id)
 
   @playerlist=Array.new
-  @playerlist=User.where(:id=> playerids.uniq).order_by_ids(playerids.uniq).in_groups_of(2) if playerids
+  @playerlist=User.where(:id=> playerids).order_by_ids(playerids).in_groups_of(2)
   Groupattendant.transaction do
      
    
@@ -472,7 +472,7 @@ def doubleplayersinput
   flash.clear
   @playerlist=Array.new #to avoid pass nil array to view 
   if params[:registration]
-    doubleregistration(params[:format], params[:playerid].uniq)
+    doubleregistration(params[:format], params[:playerid])
      
                         
     elsif params[:quit]
@@ -561,7 +561,7 @@ def destroy
   redirect_to holdgame_gamegroups_url( @holdgame )
 end
 def groupdumptoxls
- 
+
   @player_current_score=Hash.new
   @gamegroup = @holdgame.gamegroups.find( params[:gamegroup_id] )
   @gamegroup.allgroupattendee.flatten.each do |player|
