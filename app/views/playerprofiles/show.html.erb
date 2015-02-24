@@ -44,6 +44,15 @@
     <td><strong><%= @playerprofile.lastgamedate %></strong></td>
     <td colspan=3><strong><%= @playerprofile.lastgamename %></strong></td>   
     <td><strong><%= @playerprofile.lastscoreupdatedate %></strong></td> 
+     
+    <% if current_user && ( @playerprofile.user_id==current_user.id || current_user.has_role?(:admin)||current_user.has_role?(:superuser))   %>
+      <tr>
+         <td colspan=3 ><font color="black">E-mail:</font></td>
+         <td colspan=2 ><font color="black">電話:</font></td> 
+      <tr>
+         <td colspan=3 ><strong><%= @playerprofile.user.email %></strong></td>
+         <td colspan=2 ><strong><%= @playerprofile.user.phone %></strong></td>  
+    <%end%>
     <tr> 
     <td colspan=5>  
       <div id='chart' align="left"></div>
